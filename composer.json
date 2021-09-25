@@ -1,0 +1,13 @@
+{
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "require": {
+        "vlucas/phpdotenv": "^5.3",
+        "brianmcdo/image-palette": "^2.0",
+        "team-reflex/discord-php": "dev-develop",
+        "guzzlehttp/guzzle": "^7.3"
+    }
+}
