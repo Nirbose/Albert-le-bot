@@ -16,7 +16,7 @@ class DefaultEmbed {
      *
      * @var string
      */
-    public $color = '57F287';
+    public $color = '6c4a49';
 
     /**
      * Content embed

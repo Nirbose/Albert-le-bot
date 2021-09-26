@@ -6,7 +6,7 @@ use App\Handler;
 use App\Namespaces\Presence;
 use Dotenv\Dotenv;
 use Discord\Discord;
-
+use Discord\WebSockets\Intents;
 
 Dotenv::createImmutable(__DIR__)->load();
 
@@ -17,6 +17,8 @@ foreach (glob("listeners/*.php") as $filename) require_once $filename;
 
 $client = new Discord([
     'token' => $_ENV['TOKEN'],
+    'loadAllMembers' => true,
+    'intents' => Intents::getAllIntents()
 ]);
 
 try {
