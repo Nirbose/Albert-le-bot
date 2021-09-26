@@ -7,10 +7,17 @@ new App\Listener([
     'listener' => 'message',
     'run' => function(Message $message, Discord $client) {
 
-        $content = strtolower($message->content);
+        // var_dump($message->content);
 
-        if($content == 'salut') {
-            $message->channel->sendMessage('Hey !');
-        }
+        // $content = strtolower(trim($message->content));
+        // var_dump($content);
+
+        // if($content == 'salut') {
+        //     $message->channel->sendMessage('Hey !');
+        // }
+
+        // if($content == '<@!'.$client->id.'>') {
+        //     $message->channel->sendMessage('Que puis je faire pour vous ?');
+        // }
     },
 ]);

@@ -22,7 +22,7 @@ class Command
         if(!isset($options['run']))
             throw new \Error('Missing run property on "'.$options['name'].'" Command');
 
-        $this->name = $options['name'];
+        $this->name = strtolower($options['name']);
         $this->run = $options['run'];
 
         if(isset($options['description'])) {

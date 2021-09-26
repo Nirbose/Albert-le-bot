@@ -1,5 +1,7 @@
 <?php
 
+// Encore en Test, ne fonctionne pas.
+
 namespace App\Namespaces;
 
 use Discord\Discord;

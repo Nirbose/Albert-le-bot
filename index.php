@@ -33,7 +33,7 @@ try {
 
         new Presence($client, [
             'status' => 'online',
-            'activity' => ['name' => 'Test']
+            'activity' => ['name' => 'pas grand chose...']
         ]);
 
         (new Handler)->handler($client);

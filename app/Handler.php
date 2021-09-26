@@ -35,7 +35,7 @@ class Handler {
             foreach(Command::$commands as $command){
 
                 // Handle eval command
-                if(str_starts_with($without_prefix[0], $command->name) || in_array($without_prefix[0], $command->aliases)){
+                if(str_starts_with(strtolower($without_prefix[0]), $command->name) || in_array(strtolower($without_prefix[0]), $command->aliases)){
 
                     if($command->ownerOnly && $this->message->author->id != $_ENV['OWNER_ID']) {
                         return $this->message->channel->sendMessage("Nope.");
@@ -60,19 +60,6 @@ class Handler {
         foreach(Listener::$events as $event) {
             $this->client->on($event->listener, $event->run);
         }
-    }
-
-    private function isOwner($command)
-    {
-        // Check owner
-        if($command->ownerOnly){
-            if($this->message->author->id != $_ENV['OWNER_ID']) {
-                $this->message->channel->sendMessage("Nope.");
-                return true;
-            }
-        }
-
-        return false;
     }
 
 }
