@@ -6,7 +6,6 @@ use Discord\Discord;
 use Discord\Parts\Channel\Message;
 use App\Command;
 use App\Listener;
-use Discord\Builders\MessageBuilder;
 
 class Handler {
 
@@ -35,18 +34,18 @@ class Handler {
     
             foreach(Command::$commands as $command){
 
-                if($this->isOwner($command)) {
-                    break;
-                }
-
                 // Handle eval command
                 if(str_starts_with($without_prefix[0], $command->name) || in_array($without_prefix[0], $command->aliases)){
+
+                    if($command->ownerOnly && $this->message->author->id != $_ENV['OWNER_ID']) {
+                        return $this->message->channel->sendMessage("Nope.");
+                    }
     
                     $rest = trim(substr(implode(" ", $without_prefix), strlen($command->name)));
     
                     // Tkt c'est normal x)
                     // Il demande en premier arg un obj puis les args de la fonction, donc le pourquoi du comment le voila.
-                    $command->run->call($this->message, $this->message, $rest);
+                    $command->run->call($this->message, $this->message, $rest, new App);
 
                     return $command;
     

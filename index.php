@@ -3,6 +3,7 @@
 include __DIR__.'/vendor/autoload.php';
 
 use App\Handler;
+use App\Namespaces\ApplicationCommand;
 use App\Namespaces\Presence;
 use Dotenv\Dotenv;
 use Discord\Discord;
@@ -24,6 +25,10 @@ $client = new Discord([
 try {
 
     $client->on('ready', function (Discord $client) {
+        
+        $appli = new ApplicationCommand($_ENV['TOKEN'], $client->loop, $client->logger);
+        $appli->createUserCommand('Testss');
+        
         echo "Bot is ready!", PHP_EOL;
 
         new Presence($client, [
