@@ -6,6 +6,10 @@ use Discord\Discord;
 use Discord\Parts\Channel\Message;
 use App\Command;
 use App\Listener;
+use Discord\Builders\Components\ActionRow;
+use Discord\Builders\Components\Button;
+use Discord\Builders\MessageBuilder;
+use Discord\Parts\Interactions\Interaction;
 
 class Handler {
 
@@ -19,6 +23,8 @@ class Handler {
         $client->on('message', function(Message $message, Discord $client) {
             $this->message = $message;
             $this->client = $client;
+
+            $this->exec($this->message, $client);
 
             $this->command();
             $this->listener();
@@ -45,7 +51,7 @@ class Handler {
     
                     // Tkt c'est normal x)
                     // Il demande en premier arg un obj puis les args de la fonction, donc le pourquoi du comment le voila.
-                    $command->run->call($this->message, $this->message, $rest, new App);
+                    $command->run->call($this->message, $this->message, $rest, new App($this->message));
 
                     return $command;
     
@@ -59,6 +65,25 @@ class Handler {
         // Listener for events
         foreach(Listener::$events as $event) {
             $this->client->on($event->listener, $event->run);
+        }
+    }
+
+    private function exec(Message $message, Discord $client)
+    {
+        $content = strtolower(trim($message->content));
+
+        if($content == 'salut') {
+            $message->channel->sendMessage('Hey !');
+        }
+
+        if($content == '<@!'.$client->id.'>') {
+            $buttons = ActionRow::new()
+                ->addComponent(Button::new(Button::STYLE_SECONDARY)->setLabel('Ton prefix ?')
+                ->setListener(function(Interaction $interaction) { 
+                    $interaction->respondWithMessage(MessageBuilder::new()->setContent('Mon préfix est :  `' . $_ENV['PREFIX'] . '`')); 
+                }, $client));
+
+            $message->channel->sendMessage(MessageBuilder::new()->setContent('Que puis je faire pour vous ?')->addComponent($buttons));
         }
     }
 
