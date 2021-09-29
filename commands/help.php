@@ -25,7 +25,7 @@ new App\Command([
         } else {
 
             if(is_null(Command::$commands[$rest])) {
-                $embed = new DefaultEmbed($message, $message->discord, [
+                $embed = DefaultEmbed::create($message, $message->discord, [
                     'title' => 'Command ' . $rest,
                     'description' => 'Command Not Found',
                 ]);
@@ -39,7 +39,7 @@ new App\Command([
                     $aliases = "None";
                 }
 
-                $embed = new DefaultEmbed($message, $message->discord, [
+                $embed = DefaultEmbed::create($message, $message->discord, [
                     'title' => 'Command ' . $rest,
                     'description' => "\n",
                     'fields' => [
@@ -61,7 +61,7 @@ new App\Command([
                     ]
                 ]);
 
-                return $message->channel->sendEmbed($embed->embed);
+                return $message->channel->sendEmbed(DefaultEmbed::$embed);
             }
         }
 
