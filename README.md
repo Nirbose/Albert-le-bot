@@ -1,12 +1,14 @@
-# bot.php
-A PHP Discord bot
+# Albert le bot
+made in PHP 
+
+This bot is made for the discord community of Nirbose
 
 ## Install
 Create .env file :
 ```
 PREFIX=!
 TOKEN=token
-OWNER=your id
+OWNER_ID=your id
 ```
 
 in console :
