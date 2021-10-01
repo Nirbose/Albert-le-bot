@@ -16,10 +16,11 @@ new \App\Command([
                 $message->channel->sendMessage("Done.");
             }else{
                 $stringResult = strval($result);
-                DefaultEmbed::create($message, $message->discord, [
+                DefaultEmbed::new()->create($message, $message->discord, [
                     'title' => 'Eval Command',
                     'description' => "**Enter** :\n ```php\n$value```\n **Result** :\n```php\n$stringResult\n```"
-                ])->send();
+                ]);
+                $message->channel->sendEmbed(DefaultEmbed::$embed);
             }
         }catch (ParseError $error){
             $errorMessage = $error->getMessage();

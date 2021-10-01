@@ -26,11 +26,13 @@ new Command([
                 array_push($array, '> **'.  $result .' -** '. $color);
             }
 
-            DefaultEmbed::create($message, $message->discord, [
+            $embed = DefaultEmbed::new()->create($message, $message->discord, [
                 'title' => 'Palette Color',
                 'description' => "🎨 - Your image contains the following colors \n\n" . implode("\n", $array),
                 'attachments' => [$message->attachments[0]->url]
-            ])->send();
+            ]);
+
+            $message->channel->sendEmbed($embed);
 
         });
     }

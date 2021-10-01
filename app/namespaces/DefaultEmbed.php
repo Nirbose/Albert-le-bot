@@ -25,22 +25,19 @@ class DefaultEmbed {
      */
     public static $embed;
 
-    /**
-     * Content Discord message of user
-     *
-     * @var Message
-     */
-    public $message;
-
-    public static function create(Message $message, Discord $discord, array $options = []): self
+    public static function new(): self 
     {
-        self::$message = $message;
+        return new static();
+    }
+
+    public function create(Message $message, Discord $discord, array $options = [])
+    {
 
         if(isset($options['color']))
-            self::$color = $options['color'];
+            $this->color = $options['color'];
 
         $content = [
-            'color' => hexdec(self::$color),
+            'color' => hexdec($this->color),
             'author' => [
                 'name' => $message->author->user->username,
                 'icon_url' => $message->author->user->avatar
@@ -56,18 +53,7 @@ class DefaultEmbed {
         if(isset($options['fields']))
             $content['fields'] = $options['fields'];
 
-        self::$embed = new Embed($discord, $content, true);
-
-        return new static();
-    }
-
-    /**
-     * Send Embed in the discord channel
-     *
-     * @return void
-     */
-    public function send() {
-        return $this->message->channel->sendEmbed($this->embed);
+        return self::$embed = new Embed($discord, $content, true);
     }
 
 }
