@@ -22,7 +22,6 @@ new Command([
             ->setMaxValues(1)
             ->setMinValues(1);
             foreach($app->collec['roles']['user_choice_roles'] as $item) {
-                var_dump($item);
                 $select->addOption(Option::new($item['name'], $item['roleID'])->setDescription($item['description'])->setEmoji($item['emoji']));
             }
         
