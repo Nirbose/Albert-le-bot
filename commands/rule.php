@@ -24,11 +24,10 @@ new Command([
       // BUTTONS
       $buttons = ActionRow::new()
         ->addComponent(Button::new(Button::STYLE_LINK)->setLabel('Les TOS de discord')->setUrl('https://discord.com/terms'))
-        ->addComponent(Button::new(Button::STYLE_PRIMARY, 'submit_rule')->setLabel('Je suis d\'accord !')->setListener(function (Interaction $interaction) {
+        ->addComponent(Button::new(Button::STYLE_PRIMARY, 'submit_rule')->setLabel('Je suis d\'accord !')->setListener(function (Interaction $interaction) use ($app) {
           
-          $memberRoleID = '883401672955678780';
-          if(!$interaction->member->roles->has($memberRoleID)) {
-            $interaction->member->addRole($memberRoleID);
+          if(!$interaction->member->roles->has($app->collec['roles']['member_role'])) {
+            $interaction->member->addRole($app->collec['roles']['member_role']);
           } else {
             $interaction->respondWithMessage(MessageBuilder::new()->setContent('Vous avez déjà validé'), true);
           }

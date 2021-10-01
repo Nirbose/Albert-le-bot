@@ -30,7 +30,7 @@ new Command([
                 'title' => 'Palette Color',
                 'description' => "🎨 - Your image contains the following colors \n\n" . implode("\n", $array),
                 'attachments' => [$message->attachments[0]->url]
-            ]);
+            ])->send();
 
         });
     }

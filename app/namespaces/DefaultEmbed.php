@@ -32,7 +32,8 @@ class DefaultEmbed {
      */
     public $message;
 
-    public static function create(Message $message, Discord $discord, array $options = []) {
+    public static function create(Message $message, Discord $discord, array $options = []): self
+    {
         self::$message = $message;
 
         if(isset($options['color']))
@@ -57,7 +58,7 @@ class DefaultEmbed {
 
         self::$embed = new Embed($discord, $content, true);
 
-        return;
+        return new static();
     }
 
     /**

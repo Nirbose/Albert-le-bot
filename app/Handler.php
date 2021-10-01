@@ -70,9 +70,11 @@ class Handler {
 
     private function exec(Message $message, Discord $client)
     {
+        $hello = ['salut', 'hello', 'bjr', 'bonjour', 'yo'];
+
         $content = strtolower(trim($message->content));
 
-        if($content == 'salut') {
+        if(in_array($content, $hello)) {
             $message->channel->sendMessage('Hey !');
         }
 
