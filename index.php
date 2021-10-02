@@ -13,7 +13,7 @@ Dotenv::createImmutable(__DIR__)->load();
 
 define("PREFIX", $_ENV["PREFIX"]);
 
-foreach (glob("commands/*.php") as $filename) require_once $filename;
+foreach (glob("commands/*/*.php") as $filename) require_once $filename;
 foreach (glob("listeners/*.php") as $filename) require_once $filename;
 
 $client = new Discord([
@@ -25,9 +25,6 @@ $client = new Discord([
 try {
 
     $client->on('ready', function (Discord $client) {
-        
-        $appli = new ApplicationCommand($_ENV['TOKEN'], $client->loop, $client->logger);
-        $appli->createUserCommand('Testss');
         
         echo "Bot is ready!", PHP_EOL;
 
