@@ -6,17 +6,17 @@ use Discord\Discord;
 use Discord\Parts\Channel\Message;
 use App\Command;
 use App\Listener;
+use App\Namespaces\Permissions;
 use Discord\Builders\Components\ActionRow;
 use Discord\Builders\Components\Button;
 use Discord\Builders\MessageBuilder;
 use Discord\Parts\Interactions\Interaction;
+use Discord\Parts\Permissions\Permission;
 
 class Handler {
 
-    public $message;
-    public $client;
-
-    public $command;
+    public Message $message;
+    public Discord $client;
 
     public function handler(Discord $client)
     {
@@ -24,7 +24,7 @@ class Handler {
             $this->message = $message;
             $this->client = $client;
 
-            $this->exec($this->message, $client);
+            $this->onMessage($this->message, $client);
 
             $this->command();
             $this->listener();
@@ -33,18 +33,24 @@ class Handler {
 
     private function command()
     {
-        if($this->message->type != Message::TYPE_NORMAL) return null;
+        if ($this->message->type != Message::TYPE_NORMAL) return null;
 
-        if(str_starts_with($this->message->content, PREFIX)){
+        if (str_starts_with($this->message->content, PREFIX)){
             $without_prefix = explode(" ", substr($this->message->content, 1));
     
             foreach(Command::$commands as $command){
 
                 // Handle eval command
-                if(str_starts_with(strtolower($without_prefix[0]), $command->name) || in_array(strtolower($without_prefix[0]), $command->aliases)){
+                if (str_starts_with(strtolower($without_prefix[0]), $command->name) || in_array(strtolower($without_prefix[0]), $command->aliases)){
 
-                    if($command->ownerOnly && $this->message->author->id != $_ENV['OWNER_ID']) {
-                        return $this->message->channel->sendMessage("Nope.");
+                    if ($command->permission && !Permissions::hasPermission($this->message->author, $command->permission)) {
+                        return $this->message->channel->sendMessage("Vous n'avez pas la permition requise");
+                    }
+
+                    if ($command->ownerOnly && $this->message->author->id != $_ENV['OWNER_ID']) {
+                        return $this->message->channel->sendMessage("Vous n'êtes pas le propio.");
+                    } elseif ($command->boosterOnly ) {
+                        // code ...
                     }
     
                     $rest = trim(substr(implode(" ", $without_prefix), strlen($command->name)));
@@ -68,7 +74,7 @@ class Handler {
         }
     }
 
-    private function exec(Message $message, Discord $client)
+    private function onMessage(Message $message, Discord $client)
     {
         $hello = ['salut', 'hello', 'bjr', 'bonjour', 'yo'];
 

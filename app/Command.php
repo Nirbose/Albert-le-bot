@@ -10,6 +10,8 @@ class Command
     public $description;
     public $aliases = [];
     public $ownerOnly;
+    public $boosterOnly;
+    public $permission;
     public $usage = 'None';
 
     public $run;
@@ -33,6 +35,8 @@ class Command
 
         if(isset($options['aliases'])) $this->aliases = $options['aliases'];
         if(isset($options['ownerOnly'])) $this->ownerOnly = $options['ownerOnly'];
+        if(isset($options['boosterOnly'])) $this->boosterOnly = $options['boosterOnly'];
+        if(isset($options['permission'])) $this->permission = $options['permission'];
         if(isset($options['usage'])) $this->usage = $options['usage'];
 
         self::$commands[$options['name']] = $this;
