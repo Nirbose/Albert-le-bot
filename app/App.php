@@ -20,6 +20,8 @@ class App {
     {
         $this->collec = new Collection([
             'channels' => [
+                'category_ticket' => '781105165754433538',
+
                 'personnel_voice' => ['123', '123']
             ], 
             
