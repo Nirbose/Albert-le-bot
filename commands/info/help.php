@@ -10,18 +10,31 @@ new App\Command([
     'run' => function(Message $message, string $rest) {
 
         if(empty($rest)) {
+            $category = [
+                'booster' => "\n> **Booster Commands**\n",
+                'owner' => "\n> **Owner Commands**\n",
+                'other' => "\n> **All Commands**\n"
+            ];
             $commands = "Here are all my available command:\n\n";
 
             foreach(Command::$commands as $command) {
-                $commands .= "**".PREFIX.$command->name."** - ".$command->description."\n";
+                if ($command->boosterOnly) {
+                    $category['booster'] .= "**".PREFIX.$command->name."** - ".$command->description."\n";
+                } elseif ($command->ownerOnly) {
+                    $category['owner'] .= "**".PREFIX.$command->name."** - ".$command->description."\n";
+                } else {
+                    $category['other'] .= "**".PREFIX.$command->name."** - ".$command->description."\n";
+                }
             }
+
+            var_dump($category['booster']);
     
             DefaultEmbed::new()->create($message, $message->discord, [
                 'title' => 'Command List',
-                'description' => $commands,
+                'description' => implode("", $category),
             ]);
     
-            return $message->channel->sendEmbed(DefaultEmbed::$embed);
+            return $message->channel->sendMessage('', false, DefaultEmbed::$embed, null, $message);
         } else {
 
             if(is_null(Command::$commands[$rest])) {
