@@ -3,11 +3,12 @@
 include __DIR__.'/vendor/autoload.php';
 
 use App\Handler;
-use App\Namespaces\ApplicationCommand;
 use App\Namespaces\Presence;
 use Dotenv\Dotenv;
 use Discord\Discord;
 use Discord\WebSockets\Intents;
+use Monolog\Logger;
+use React\Datagram\Factory;
 
 Dotenv::createImmutable(__DIR__)->load();
 
@@ -19,6 +20,7 @@ foreach (glob("listeners/*.php") as $filename) require_once $filename;
 $client = new Discord([
     'token' => $_ENV['TOKEN'],
     'loadAllMembers' => true,
+    'logger' => new Logger('Albert-le-bot'),
     'intents' => Intents::getAllIntents()
 ]);
 

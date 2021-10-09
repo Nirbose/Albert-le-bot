@@ -2,11 +2,13 @@
     "channels": {
         "category_ticket": "781105165754433538",
 
-        "personnel_voice": ["123", "456"]
+        "personnel_voice": ["123", "818590927052472380"]
     },
 
     "roles": {
         "member_role": "883401672955678780",
+
+        "booster_role": ["891707949997785148"],
 
         "user_choice_roles": [
             {

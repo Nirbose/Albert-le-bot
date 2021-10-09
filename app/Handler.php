@@ -27,8 +27,9 @@ class Handler {
             $this->onMessage($this->message, $client);
 
             $this->command();
-            $this->listener();
         });
+
+        $this->listener($client);
     }
 
     private function command()
@@ -66,11 +67,11 @@ class Handler {
         }
     }
 
-    private function listener(): void
+    private function listener(Discord $client): void
     {
         // Listener for events
         foreach(Listener::$events as $event) {
-            $this->client->on($event->listener, $event->run);
+            $client->on($event->listener, $event->run);
         }
     }
 
