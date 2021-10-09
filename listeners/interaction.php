@@ -11,5 +11,6 @@ $memberRoleID = '888723883677581332';
 new Listener([
     'listener' => Event::INTERACTION_CREATE,
     'run' => function(Interaction $interaction, Discord $discord) use ($memberRoleID) {
+    
     }
 ]);

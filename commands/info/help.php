@@ -15,7 +15,6 @@ new App\Command([
                 'owner' => "\n> **Owner Commands**\n",
                 'other' => "\n> **All Commands**\n"
             ];
-            $commands = "Here are all my available command:\n\n";
 
             foreach(Command::$commands as $command) {
                 if ($command->boosterOnly) {
@@ -26,8 +25,6 @@ new App\Command([
                     $category['other'] .= "**".PREFIX.$command->name."** - ".$command->description."\n";
                 }
             }
-
-            var_dump($category['booster']);
     
             DefaultEmbed::new()->create($message, $message->discord, [
                 'title' => 'Command List',

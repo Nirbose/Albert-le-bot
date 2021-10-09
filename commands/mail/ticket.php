@@ -15,10 +15,12 @@ new Command([
     'ownerOnly' => true,
     'run' => function (Message $message, string $rest, App $app) {
         $button = ActionRow::new()->addComponent(Button::new(Button::STYLE_SECONDARY, 'open_ticket')->setLabel('Ouvir un ticket !')->setEmoji('✉')->setListener(function (Interaction $interaction) use ($message, $app) {
-            $message->guild->channels->create([
-                'name' => 'test',
-                // 'parent_id' => $app->collec['channels']['category_ticket']
+            $channel = $message->guild->channels->create([
+                'name' => 'Ticket express',
+                'parent_id' => $app->collec['channels']['category_ticket']
             ]);
+
+            $message->guild->channels->save($channel);
         }, $message->discord));
         
         $builder = MessageBuilder::new()
