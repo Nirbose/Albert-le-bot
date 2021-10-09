@@ -50,8 +50,18 @@ class Handler {
 
                     if ($command->ownerOnly && $this->message->author->id != $_ENV['OWNER_ID']) {
                         return $this->message->channel->sendMessage("Vous n'êtes pas le propio.");
-                    } elseif ($command->boosterOnly ) {
-                        // code ...
+                    } 
+
+                    $findBoosterRole = false;
+
+                    foreach ($this->message->author->roles as $role) {
+                        if (in_array($role->id, ["891707949997785148"])) {
+                            $findBoosterRole = true;
+                        }
+                    }
+
+                    if (!$findBoosterRole) {
+                        return $this->message->channel->sendMessage("Vous n'êtes pas booster !");
                     }
     
                     $rest = trim(substr(implode(" ", $without_prefix), strlen($command->name)));
