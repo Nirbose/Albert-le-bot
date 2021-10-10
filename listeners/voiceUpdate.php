@@ -1,6 +1,5 @@
 <?php
 
-use App\App;
 use App\Listener;
 use Discord\Discord;
 use Discord\Helpers\Collection;
