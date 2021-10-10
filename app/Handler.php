@@ -61,6 +61,10 @@ class Handler {
                             }
                         }
 
+                        if (Permissions::hasPermission($this->message->author, 'administrator')) {
+                            $findBoosterRole = true;
+                        }
+
                         if (!$findBoosterRole) {
                             return $this->message->channel->sendMessage("Vous n'êtes pas booster !");
                         }
