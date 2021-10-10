@@ -2,7 +2,6 @@
 
 namespace App\Namespaces;
 
-use Discord\Parts\Permissions\RolePermission;
 use Discord\Parts\User\Member;
 
 /**

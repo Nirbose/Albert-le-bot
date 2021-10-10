@@ -8,7 +8,6 @@ use Dotenv\Dotenv;
 use Discord\Discord;
 use Discord\WebSockets\Intents;
 use Monolog\Logger;
-use React\Datagram\Factory;
 
 Dotenv::createImmutable(__DIR__)->load();
 

@@ -52,16 +52,18 @@ class Handler {
                         return $this->message->channel->sendMessage("Vous n'êtes pas le propio.");
                     } 
 
-                    $findBoosterRole = false;
+                    if ($command->boosterOnly) {
+                        $findBoosterRole = false;
 
-                    foreach ($this->message->author->roles as $role) {
-                        if (in_array($role->id, ["891707949997785148"])) {
-                            $findBoosterRole = true;
+                        foreach ($this->message->author->roles as $role) {
+                            if (in_array($role->id, ["891707949997785148", "894297624935546932"])) {
+                                $findBoosterRole = true;
+                            }
                         }
-                    }
 
-                    if (!$findBoosterRole) {
-                        return $this->message->channel->sendMessage("Vous n'êtes pas booster !");
+                        if (!$findBoosterRole) {
+                            return $this->message->channel->sendMessage("Vous n'êtes pas booster !");
+                        }
                     }
     
                     $rest = trim(substr(implode(" ", $without_prefix), strlen($command->name)));
