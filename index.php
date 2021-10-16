@@ -6,6 +6,7 @@ use App\Handler;
 use App\Namespaces\Presence;
 use Dotenv\Dotenv;
 use Discord\Discord;
+use Discord\Parts\User\Activity;
 use Discord\WebSockets\Intents;
 use Monolog\Logger;
 
@@ -31,7 +32,7 @@ try {
 
         new Presence($client, [
             'status' => 'online',
-            'activity' => ['name' => 'pas grand chose...']
+            'activity' => ['name' => 'les services de Nirbose', 'type' => Activity::TYPE_LISTENING]
         ]);
 
         (new Handler)->handler($client);
