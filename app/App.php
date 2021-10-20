@@ -16,6 +16,8 @@ class App {
     public Message $message;
     public MessageBuilder $builder;
 
+    public \PDO $database;
+
     public function __construct(Message $message)
     {
         $this->collec = new Collection(

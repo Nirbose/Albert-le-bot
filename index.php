@@ -14,7 +14,7 @@ Dotenv::createImmutable(__DIR__)->load();
 
 define("PREFIX", $_ENV["PREFIX"]);
 
-foreach (glob("commands/*/*.php") as $filename) require_once $filename;
+foreach (glob("plugins/*/*.php") as $filename) require_once $filename;
 foreach (glob("listeners/*.php") as $filename) require_once $filename;
 
 $client = new Discord([
