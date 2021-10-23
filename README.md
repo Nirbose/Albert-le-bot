@@ -9,6 +9,7 @@ Create .env file :
 PREFIX=!
 TOKEN=token
 OWNER_ID=your id
+JSON_FILE=fichier.json
 ```
 
 in console :
