@@ -97,8 +97,10 @@ class Handler {
 
         $content = strtolower(trim($message->content));
 
+        if ($message->author->bot) return;
+
         if(in_array($content, $hello)) {
-            $message->channel->sendMessage('Hey !');
+            $message->channel->sendMessage($hello[array_rand($hello)] . " !");
         }
 
         if($content == '<@!'.$client->id.'>') {

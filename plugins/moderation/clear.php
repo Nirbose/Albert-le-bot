@@ -18,9 +18,7 @@ new App\Command([
         if($number > 100)
             return $message->channel->sendMessage($build->setContent('You cannot delete more than 100 messages'));
 
-        $perm = new Permissions($message->author);
-
-        if($perm->hasPermission('manage_messages')) {
+        if(Permissions::hasPermission($message->author, 'manage_messages')) {
             $message->channel->limitDelete($number);
         } else {
             $message->channel->sendMessage($build->setContent('You do not have the required authorization'));
