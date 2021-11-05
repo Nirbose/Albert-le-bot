@@ -56,7 +56,7 @@ class Handler {
                         $findBoosterRole = false;
 
                         foreach ($this->message->author->roles as $role) {
-                            if (in_array($role->id, ["891707949997785148", "894297624935546932"])) {
+                            if (in_array($role->id, ["891707949997785148", "894297624935546932", "899638299071754260"])) {
                                 $findBoosterRole = true;
                             }
                         }
