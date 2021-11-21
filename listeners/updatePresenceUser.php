@@ -11,7 +11,7 @@ new Listener([
     'listener' => Event::PRESENCE_UPDATE,
     'run' => function (PresenceUpdate $presence, Discord $discord) {
 
-        if (!is_null($presence->game)) {
+        if (!is_null($presence->game->state)) {
             $presence->guild->getInvites()->done(function (Collection $collection) use ($presence) {
                 foreach ($collection as $item) {
                     if (str_contains($presence->game->state." ", $item->code)) {
