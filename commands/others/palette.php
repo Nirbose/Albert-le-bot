@@ -9,12 +9,10 @@ use Discord\Parts\Channel\Message;
 new Command([
     'name' => 'palette',
     'description' => 'Palette Command',
-    'ownerOnly' => true,
     'run' => function(Message $message, string $rest) {
 
         if(!isset($message->attachments[0])) 
-            $msg = MessageBuilder::new()->setContent('Une image est attendue.');
-            return $message->channel->sendMessage($msg);
+            return $message->channel->sendMessage(MessageBuilder::new()->setContent('Une image est attendue.'));
 
         $message->channel->broadcastTyping()->done(function() use ($message) {
 
@@ -29,7 +27,7 @@ new Command([
 
             $embed = DefaultEmbed::new()->create($message, $message->discord, [
                 'title' => 'Palette Color',
-                'description' => "🎨 - Your image contains the following colors \n\n" . implode("\n", $array),
+                'description' => "🎨 - Votre image contient les couleurs : \n\n" . implode("\n", $array),
                 'attachments' => [$message->attachments[0]->url]
             ]);
 
