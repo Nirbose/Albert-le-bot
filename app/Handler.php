@@ -11,7 +11,6 @@ use Discord\Builders\Components\ActionRow;
 use Discord\Builders\Components\Button;
 use Discord\Builders\MessageBuilder;
 use Discord\Parts\Interactions\Interaction;
-use Discord\Parts\Permissions\Permission;
 
 class Handler {
 
@@ -38,8 +37,8 @@ class Handler {
 
         if (str_starts_with($this->message->content, PREFIX)){
             $without_prefix = explode(" ", substr($this->message->content, 1));
-    
-            foreach(Command::$commands as $command){
+
+            foreach (Command::getCommand() as $command) {
 
                 // Handle eval command
                 if (str_starts_with(strtolower($without_prefix[0]), $command->name) || in_array(strtolower($without_prefix[0]), $command->aliases)){
@@ -56,7 +55,7 @@ class Handler {
                         $findBoosterRole = false;
 
                         foreach ($this->message->author->roles as $role) {
-                            if (in_array($role->id, ["891707949997785148", "894297624935546932"])) {
+                            if (in_array($role->id, Datas::BOOSTER_ROLES)) {
                                 $findBoosterRole = true;
                             }
                         }
@@ -71,7 +70,7 @@ class Handler {
                     }
     
                     $rest = trim(substr(implode(" ", $without_prefix), strlen($command->name)));
-    
+
                     // Tkt c'est normal x)
                     // Il demande en premier arg un obj puis les args de la fonction, donc le pourquoi du comment le voila.
                     $command->run->call($this->message, $this->message, $rest, new App($this->message));

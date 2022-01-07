@@ -2,78 +2,32 @@
 
 namespace App;
 
+use Discord\Parts\Guild\Guild;
+use Discord\Parts\Interactions\Command\Command as SlashCommand;
+
 class Command
 {
+
     public static $commands = [];
 
-    /**
-     * Command name
-     *
-     * @var string
-     */
-    public string $name;
+    public $name;
 
-    /**
-     * Command description
-     *
-     * @var string
-     */
-    public string $description;
+    public $description;
 
-    /**
-     * Command aliases
-     *
-     * @var array
-     */
-    public array $aliases = [];
+    public $aliases = [];
 
-    /**
-     * Command permission only for owner
-     *
-     * @var string
-     */
-    public bool $ownerOnly;
+    public $ownerOnly;
 
-    /**
-     * Command permission only for booster
-     *
-     * @var string
-     */
-    public bool $boosterOnly;
+    public $boosterOnly;
 
-    /**
-     * Command permission
-     *
-     * @var string
-     */
-    public string $permission;
+    public $permission;
 
-    /**
-     * Invisible for help
-     *
-     * @var bool
-     */
     public $invisible;
 
-    /**
-     * Usage Command exemple
-     * 
-     * @var string
-     */
-    public string $usage = 'None';
+    public $usage = 'None';
 
-    /**
-     * Command is SlashCommand
-     * 
-     * @var bool
-     */
-    public bool $slash;
+    public $slash = false;
 
-    /**
-     * Run commmand function
-     * 
-     * @var callable
-     */
     public $run;
 
     public function __construct(array $options)
@@ -99,10 +53,15 @@ class Command
         if(isset($options['permission'])) $this->permission = $options['permission'];
         if(isset($options['invisible'])) $this->invisible = $options['invisible'];
         if(isset($options['usage'])) $this->usage = $options['usage'];
+        
         if(isset($options['slash'])) $this->slash = $options['slash'];
 
         self::$commands[$options['name']] = $this;
         
+    }
+
+    public static function getCommand() {
+        return self::$commands;
     }
 
 }

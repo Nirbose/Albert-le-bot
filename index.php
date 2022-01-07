@@ -2,10 +2,13 @@
 
 include __DIR__.'/vendor/autoload.php';
 
+use App\Command;
 use App\Handler;
 use App\Namespaces\Presence;
 use Dotenv\Dotenv;
 use Discord\Discord;
+use Discord\Parts\Guild\Guild;
+use Discord\Parts\Interactions\Command\Command as SlashCommand;
 use Discord\Parts\User\Activity;
 use Discord\WebSockets\Intents;
 use Monolog\Logger;
@@ -14,7 +17,7 @@ Dotenv::createImmutable(__DIR__)->load();
 
 define("PREFIX", $_ENV["PREFIX"]);
 
-foreach (glob("plugins/*/*.php") as $filename) require_once $filename;
+foreach (glob("commands/*/*.php") as $filename) require_once $filename;
 foreach (glob("listeners/*.php") as $filename) require_once $filename;
 
 $client = new Discord([
@@ -34,6 +37,19 @@ try {
             'status' => 'online',
             'activity' => ['name' => 'les services de Nirbose', 'type' => Activity::TYPE_LISTENING]
         ]);
+
+        foreach (Command::getCommand() as $command) {
+            if ($command->slash) {
+                $slashCommand = new SlashCommand($client, [
+                    'name' => $command->name,
+                    'description' => $command->description,
+                ]);
+                
+                $client->guilds->fetch('781105165754433537')->done(function (Guild $guild) use ($slashCommand) {
+                    $guild->commands->save($slashCommand);
+                });
+            }
+        }
 
         (new Handler)->handler($client);
         
