@@ -2,11 +2,19 @@
 
 namespace App;
 
+use Discord\Discord;
 use Discord\Parts\Guild\Guild;
 use Discord\Parts\Interactions\Command\Command as SlashCommand;
 
 class Command
 {
+
+    /**
+     * Discord client
+     *
+     * @var Discord|null
+     */
+    public static $discord = null;
 
     public static $commands = [];
 
@@ -32,6 +40,10 @@ class Command
 
     public function __construct(array $options)
     {
+
+        if (is_null(self::$discord))
+            throw new \Error("Discord n'existe pas.");
+
         if(!isset($options['name']))
             throw new \Error("Missing name property on some Command");
 
@@ -54,7 +66,9 @@ class Command
         if(isset($options['invisible'])) $this->invisible = $options['invisible'];
         if(isset($options['usage'])) $this->usage = $options['usage'];
         
-        if(isset($options['slash'])) $this->slash = $options['slash'];
+        if(isset($options['slash']) && $options['slash']) {
+            $this->slash = true;
+        } 
 
         self::$commands[$options['name']] = $this;
         
@@ -62,6 +76,10 @@ class Command
 
     public static function getCommand() {
         return self::$commands;
+    }
+
+    public static function init_discord(Discord $discord) {
+        self::$discord = $discord;
     }
 
 }

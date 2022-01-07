@@ -17,15 +17,17 @@ Dotenv::createImmutable(__DIR__)->load();
 
 define("PREFIX", $_ENV["PREFIX"]);
 
-foreach (glob("commands/*/*.php") as $filename) require_once $filename;
-foreach (glob("listeners/*.php") as $filename) require_once $filename;
-
 $client = new Discord([
     'token' => $_ENV['TOKEN'],
     'loadAllMembers' => true,
     'logger' => new Logger('Albert-le-bot'),
     'intents' => Intents::getAllIntents()
 ]);
+
+Command::init_discord($client);
+
+foreach (glob("commands/*/*.php") as $filename) require_once $filename;
+foreach (glob("listeners/*.php") as $filename) require_once $filename;
 
 try {
 
