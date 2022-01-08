@@ -11,6 +11,7 @@ use Discord\Builders\Components\ActionRow;
 use Discord\Builders\Components\Button;
 use Discord\Builders\MessageBuilder;
 use Discord\Parts\Interactions\Interaction;
+use Discord\WebSockets\Event;
 
 class Handler {
 
@@ -19,6 +20,16 @@ class Handler {
 
     public function handler(Discord $client)
     {
+        // Handle slash command
+        $client->on(Event::INTERACTION_CREATE, function (Interaction $interaction) {
+            foreach (Command::getCommand() as $command) {
+                if ($interaction->data->name == $command->name) {
+                    $command->run->call($interaction, $interaction);
+                }
+            }
+        });
+
+        // Handle message command
         $client->on('message', function(Message $message, Discord $client) {
             $this->message = $message;
             $this->client = $client;
@@ -38,6 +49,7 @@ class Handler {
         if (str_starts_with($this->message->content, PREFIX)){
             $without_prefix = explode(" ", substr($this->message->content, 1));
 
+            /** @var Command $command */
             foreach (Command::getCommand() as $command) {
 
                 // Handle eval command

@@ -40,7 +40,9 @@ try {
             'activity' => ['name' => 'les services de Nirbose', 'type' => Activity::TYPE_LISTENING]
         ]);
 
+        /** @var Command $command */
         foreach (Command::getCommand() as $command) {
+
             if ($command->slash) {
                 $slashCommand = new SlashCommand($client, [
                     'name' => $command->name,

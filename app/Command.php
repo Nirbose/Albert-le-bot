@@ -3,8 +3,6 @@
 namespace App;
 
 use Discord\Discord;
-use Discord\Parts\Guild\Guild;
-use Discord\Parts\Interactions\Command\Command as SlashCommand;
 
 class Command
 {
@@ -16,26 +14,74 @@ class Command
      */
     public static $discord = null;
 
-    public static $commands = [];
+    /**
+     * All Command
+     *
+     * @var array
+     */
+    public static array $commands = [];
 
-    public $name;
+    /**
+     * Name Command
+     *
+     * @var string
+     */
+    public string $name;
 
-    public $description;
+    /**
+     * Description Command
+     *
+     * @var string
+     */
+    public string $description;
 
-    public $aliases = [];
+    /**
+     * Aliases Command
+     *
+     * @var array
+     */
+    public array $aliases = [];
 
-    public $ownerOnly;
+    /**
+     * Is owner only Command
+     *
+     * @var bool
+     */
+    public bool $ownerOnly = false;
 
-    public $boosterOnly;
+    /**
+     * Is booster only Command
+     *
+     * @var bool
+     */
+    public bool $boosterOnly = false;
 
-    public $permission;
+    /**
+     * Permition Commmand
+     *
+     * @var string|null
+     */
+    public $permission = null;
 
-    public $invisible;
+    /**
+     * Usage Command
+     *
+     * @var string|null
+     */
+    public string $usage = 'None';
 
-    public $usage = 'None';
+    /**
+     * Is Command slash
+     *
+     * @var boolean
+     */
+    public bool $slash = false;
 
-    public $slash = false;
-
+    /**
+     * Run Command
+     *
+     * @var callable|object
+     */
     public $run;
 
     public function __construct(array $options)
@@ -63,7 +109,6 @@ class Command
         if(isset($options['ownerOnly'])) $this->ownerOnly = $options['ownerOnly'];
         if(isset($options['boosterOnly'])) $this->boosterOnly = $options['boosterOnly'];
         if(isset($options['permission'])) $this->permission = $options['permission'];
-        if(isset($options['invisible'])) $this->invisible = $options['invisible'];
         if(isset($options['usage'])) $this->usage = $options['usage'];
         
         if(isset($options['slash']) && $options['slash']) {

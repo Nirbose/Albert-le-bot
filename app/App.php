@@ -2,35 +2,30 @@
 
 namespace App;
 
-use Discord\Builders\Components\Component;
 use Discord\Builders\MessageBuilder;
-use Discord\Helpers\Collection;
 use Discord\Parts\Channel\Message;
+use Discord\Parts\Interactions\Interaction;
 
 class App {
 
-    public int $color = 7096905;
-
-    public Collection $collec;
-
-    public Message $message;
-    public MessageBuilder $builder;
-
-    public \PDO $database;
-
-    public function __construct(Message $message)
+    public function __construct(
+        private Message|Interaction $message, 
+        private Command $command
+        )
     {
-        $this->collec = new Collection(
-            json_decode(file_get_contents(dirname(__DIR__).'\\server.json'), true)
-        );
-
-        $this->message = $message;
-        $this->builder = MessageBuilder::new();
     }
 
-    public function send(string $content, Component $component)
+    public function send(string $content, array $options = [])
     {
-        return $this->message->channel->sendMessage(MessageBuilder::new()->setContent($content)->addComponent($component));
+        $resp = MessageBuilder::new()->setContent($content);
+
+        if ($this->command->slash) {
+            return $this->message->respondWithMessage($resp);
+        }
+
+        return $this->message->channel->sendMessage($resp);
     }
 
 }
+
+
