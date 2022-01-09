@@ -20,11 +20,12 @@ class Handler {
 
     public function handler(Discord $client)
     {
+
         // Handle slash command
         $client->on(Event::INTERACTION_CREATE, function (Interaction $interaction) {
             foreach (Command::getCommand() as $command) {
                 if ($interaction->data->name == $command->name) {
-                    $command->run->call($interaction, $interaction);
+                    $command->run->call($interaction, new App($interaction, $command));
                 }
             }
         });
@@ -85,7 +86,7 @@ class Handler {
 
                     // Tkt c'est normal x)
                     // Il demande en premier arg un obj puis les args de la fonction, donc le pourquoi du comment le voila.
-                    $command->run->call($this->message, $this->message, $rest, new App($this->message));
+                    $command->run->call($this->message, new App($this->message, $command));
 
                     return $command;
     

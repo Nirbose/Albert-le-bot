@@ -24,11 +24,6 @@ $client = new Discord([
     'intents' => Intents::getAllIntents()
 ]);
 
-Command::init_discord($client);
-
-foreach (glob("commands/*/*.php") as $filename) require_once $filename;
-foreach (glob("listeners/*.php") as $filename) require_once $filename;
-
 try {
 
     $client->on('ready', function (Discord $client) {
@@ -40,24 +35,14 @@ try {
             'activity' => ['name' => 'les services de Nirbose', 'type' => Activity::TYPE_LISTENING]
         ]);
 
-        /** @var Command $command */
-        foreach (Command::getCommand() as $command) {
-
-            if ($command->slash) {
-                $slashCommand = new SlashCommand($client, [
-                    'name' => $command->name,
-                    'description' => $command->description,
-                ]);
-                
-                $client->guilds->fetch('781105165754433537')->done(function (Guild $guild) use ($slashCommand) {
-                    $guild->commands->save($slashCommand);
-                });
-            }
-        }
-
         (new Handler)->handler($client);
         
     });
+
+    Command::init_discord($client);
+
+    foreach (glob("commands/*/*.php") as $filename) require_once $filename;
+    foreach (glob("listeners/*.php") as $filename) require_once $filename;
 
     $client->run();
 } catch (\Discord\Exceptions\IntentException $e) {

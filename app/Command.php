@@ -3,6 +3,8 @@
 namespace App;
 
 use Discord\Discord;
+use Discord\Parts\Guild\Guild;
+use Discord\Parts\Interactions\Command\Command as SlashCommand;
 
 class Command
 {
@@ -12,14 +14,14 @@ class Command
      *
      * @var Discord|null
      */
-    public static $discord = null;
+    private static $discord = null;
 
     /**
      * All Command
      *
      * @var array
      */
-    public static array $commands = [];
+    private static array $commands = [];
 
     /**
      * Name Command
@@ -41,6 +43,13 @@ class Command
      * @var array
      */
     public array $aliases = [];
+
+    /**
+     * Args Command
+     *
+     * @var array
+     */
+    public array $args = [];
 
     /**
      * Is owner only Command
@@ -110,9 +119,19 @@ class Command
         if(isset($options['boosterOnly'])) $this->boosterOnly = $options['boosterOnly'];
         if(isset($options['permission'])) $this->permission = $options['permission'];
         if(isset($options['usage'])) $this->usage = $options['usage'];
+        if(isset($options['args'])) $this->args = $options['args'];
         
         if(isset($options['slash']) && $options['slash']) {
             $this->slash = true;
+
+            $slashCommand = new SlashCommand(self::$discord, [
+                'name' => $this->name,
+                'description' => $this->description,
+            ]);
+            
+            self::$discord->guilds->fetch('781105165754433537')->done(function (Guild $guild) use ($slashCommand) {
+                $guild->commands->save($slashCommand);
+            });
         } 
 
         self::$commands[$options['name']] = $this;
@@ -124,6 +143,10 @@ class Command
     }
 
     public static function init_discord(Discord $discord) {
+        if (self::$discord) {
+            return;
+        }
+
         self::$discord = $discord;
     }
 

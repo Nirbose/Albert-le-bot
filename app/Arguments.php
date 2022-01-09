@@ -6,7 +6,7 @@ use Discord\Parts\Channel\Message;
 
 class Arguments {
 
-    public array $render = [];
+    private array $render = [];
 
     public function __construct(
         private Message $message,
@@ -14,7 +14,11 @@ class Arguments {
         ) 
     {
         $split = explode(' ', $this->message->content);
+        $split = array_splice($split, 1, count($split));
 
+        foreach ($this->args as $key => $value) {
+            $this->{$value['name']} = $split[$key];
+        }
     }
 
     public function getRest() {
