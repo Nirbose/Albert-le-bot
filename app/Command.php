@@ -146,9 +146,8 @@ class Command
         if(isset($options['slash']) && $options['slash']) {
             $this->slash = true;
 
-            if (isset($options['slashType'])) {
-                $this->slashType = $options['slashType'];
-            }
+            if (isset($options['slashType'])) $this->slashType = $options['slashType'];
+            if (isset($options['slashOptions'])) $this->slashOptions = $options['slashOptions'];
 
             $attributes = [
                 'type' => $this->slashType,
@@ -169,7 +168,7 @@ class Command
                         $guild->commands->save($slashCommand);
                     });
                 }
-                
+
             } else {
                 self::$discord->application->commands->save($slashCommand);
             }
