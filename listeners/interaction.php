@@ -7,18 +7,14 @@ use Discord\Helpers\Collection;
 use Discord\Parts\Interactions\Interaction;
 use Discord\WebSockets\Event;
 
-$collec = new Collection(
-    json_decode(file_get_contents(dirname(__DIR__).'\\server.json'), true)
-);
-
 new Listener([
     'listener' => Event::INTERACTION_CREATE,
-    'run' => function(Interaction $interaction, Discord $discord) use ($collec) {
+    'run' => function(Interaction $interaction, Discord $discord) {
         
         // RULE BUTTON !
         if ($interaction->data->custom_id == "submit_rule") {
-            if(!$interaction->member->roles->has($collec['roles']['member_role'])) {
-                $interaction->member->addRole($collec['roles']['member_role']);
+            if(!$interaction->member->roles->has('')) {
+                $interaction->member->addRole('');
             } else {
                 $interaction->respondWithMessage(MessageBuilder::new()->setContent('Vous avez déjà validé'), true);
             }

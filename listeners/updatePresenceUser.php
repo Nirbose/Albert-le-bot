@@ -18,7 +18,7 @@ new Listener([
                         if (!$presence->member->roles->has('891707949997785148')) {
                             $presence->member->addRole('891707949997785148');
                             $presence->guild->channels->fetch($presence->guild->system_channel_id)->done(function (Channel $channel) {
-                                $channel->sendMessage('Merci d\'avoir mis une invitation du serv dans ton profil !');
+                                $channel->sendMessage('Merci d\'avoir mis une invitation du serveur dans ton profil !');
                             });
                         }
                     } else {
