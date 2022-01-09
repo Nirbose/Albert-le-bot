@@ -16,6 +16,7 @@ new Command([
         [
             'name' => 'machin',
             'description' => 'machin test',
+            'required' => true,
             'type' => 'string',
         ],
     ],

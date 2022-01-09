@@ -9,6 +9,10 @@ use Discord\Parts\Interactions\Interaction;
 class App {
 
     public $args = [];
+    private static array $err = [
+        'status' => false,
+        'message' => ''
+    ];
 
     public function __construct(
         private Message|Interaction $message, 
@@ -22,11 +26,22 @@ class App {
     {
         $resp = MessageBuilder::new()->setContent($content);
 
+        if (self::$err['status']) {
+            self::$err['status'] = false;
+            $resp->setContent(self::$err['message']);
+        }
+
         if ($this->command->slash) {
             return $this->message->respondWithMessage($resp);
         }
 
         return $this->message->channel->sendMessage($resp);
+    }
+
+    public static function createError(string $error)
+    {
+        self::$err['status'] = true;
+        self::$err['message'] = $error;
     }
 
 }

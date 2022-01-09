@@ -17,8 +17,16 @@ class Arguments {
         $split = array_splice($split, 1, count($split));
 
         foreach ($this->args as $key => $value) {
-            $this->{$value['name']} = $split[$key];
+            if (isset($split[$key])) {
+                $this->render[$value['name']] = $split[$key];
+                $this->{$value['name']} = $split[$key];
+            }
+            elseif (!isset($split[$key]) && $value['required'] == true) {
+                App::createError('Vous devez entrer un argument');
+            }
         }
+
+        return true;
     }
 
     public function getRest() {
