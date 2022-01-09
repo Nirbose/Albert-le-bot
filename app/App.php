@@ -19,7 +19,9 @@ class App {
         private Command $command
         )
     {
-        $this->args = new Arguments($this->message, $this->command->args);
+        if (!$command->slash) {
+            $this->args = new Arguments($this->message, $this->command->args);
+        }
     }
 
     public function send(string $content, array $options = [])

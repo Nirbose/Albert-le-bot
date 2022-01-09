@@ -18,10 +18,10 @@ class Arguments {
 
         foreach ($this->args as $key => $value) {
             if (isset($split[$key])) {
-                $this->render[$value['name']] = $split[$key];
-                $this->{$value['name']} = $split[$key];
+                $this->render[$value['name']] = $split[$key] ?? null;
+                $this->{$value['name']} = $split[$key] ?? null;
             }
-            elseif (!isset($split[$key]) && $value['required'] == true) {
+            elseif (!isset($split[$key]) && @$value['required'] == true) {
                 App::createError('Vous devez entrer un argument');
             }
         }

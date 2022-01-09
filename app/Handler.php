@@ -23,6 +23,7 @@ class Handler {
 
         // Handle slash command
         $client->on(Event::INTERACTION_CREATE, function (Interaction $interaction) {
+            /** @var Command $command */
             foreach (Command::getCommand() as $command) {
                 if ($interaction->data->name == $command->name) {
                     $command->run->call($interaction, new App($interaction, $command));

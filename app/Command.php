@@ -87,6 +87,27 @@ class Command
     public bool $slash = false;
 
     /**
+     * Type SlashCommand
+     *
+     * @var int
+     */
+    public int $slashType = SlashCommand::CHAT_INPUT;
+
+    /**
+     * Options for SlashCommand
+     *
+     * @var array
+     */
+    public array $slashOptions = [];
+
+    /**
+     * Command Version
+     *
+     * @var integer
+     */
+    public int $verson = 1;
+
+    /**
      * Run Command
      *
      * @var callable|object
@@ -120,18 +141,38 @@ class Command
         if(isset($options['permission'])) $this->permission = $options['permission'];
         if(isset($options['usage'])) $this->usage = $options['usage'];
         if(isset($options['args'])) $this->args = $options['args'];
+        if(isset($options['version'])) $this->version = $options['version'];
         
         if(isset($options['slash']) && $options['slash']) {
             $this->slash = true;
 
-            $slashCommand = new SlashCommand(self::$discord, [
+            if (isset($options['slashType'])) {
+                $this->slashType = $options['slashType'];
+            }
+
+            $attributes = [
+                'type' => $this->slashType,
                 'name' => $this->name,
-                'description' => $this->description,
-            ]);
-            
-            self::$discord->guilds->fetch('781105165754433537')->done(function (Guild $guild) use ($slashCommand) {
-                $guild->commands->save($slashCommand);
-            });
+            ];
+
+            if ($this->slashType == SlashCommand::CHAT_INPUT) {
+                $attributes['description'] = $this->description;
+                $attributes['options'] = $this->slashOptions;
+                $attributes['version'] = $this->version;
+            }
+
+            $slashCommand = new SlashCommand(self::$discord, $attributes);
+
+            if (count($options['slashGuilds']) > 0) {
+                foreach ($options['slashGuilds'] as $guild) {
+                    self::$discord->guilds->fetch($guild)->done(function (Guild $guild) use ($slashCommand) {
+                        $guild->commands->save($slashCommand);
+                    });
+                }
+                
+            } else {
+                self::$discord->application->commands->save($slashCommand);
+            }
         } 
 
         self::$commands[$options['name']] = $this;
