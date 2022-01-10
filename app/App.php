@@ -9,6 +9,7 @@ use Discord\Parts\Interactions\Interaction;
 class App {
 
     public $args = [];
+
     private static array $err = [
         'status' => false,
         'message' => ''

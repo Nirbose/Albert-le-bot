@@ -22,11 +22,13 @@ class Arguments {
                 $this->{$value['name']} = $split[$key] ?? null;
             }
             elseif (!isset($split[$key]) && @$value['required'] == true) {
-                App::createError('Vous devez entrer un argument');
+                return App::createError('Vous devez entrer un argument');
+            }
+            else {
+                $this->render[$value['name']] = null;
+                $this->{$value['name']} = null;
             }
         }
-
-        return true;
     }
 
     public function getRest() {
