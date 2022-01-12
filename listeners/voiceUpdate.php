@@ -1,22 +1,22 @@
 <?php
 
+use App\Datas;
 use App\Listener;
 use Discord\Discord;
-use Discord\Helpers\Collection;
 use Discord\Parts\Channel\Channel;
 use Discord\Parts\WebSockets\VoiceStateUpdate;
 use Discord\WebSockets\Event;
 
-$collec = new Collection(
-    json_decode(file_get_contents(dirname(__DIR__).'\\server.json'), true)
-);
-
 $GLOBALS['voice_save'] = [];
+$GLOBALS['user_save'] = [];
 
 new Listener([
     'listener' => Event::VOICE_STATE_UPDATE,
-    'run' => function (VoiceStateUpdate $state, Discord $discord) use ($collec) {
-        foreach ($collec['channels']['personnel_voice'] as $voiceID) {
+    'run' => function (VoiceStateUpdate $state, Discord $discord) {
+
+        $timer = 0;
+        // Personnel voice create and delete
+        foreach (Datas::PERSONNEL_VOICE as $voiceID) {
             if ($state->channel_id == $voiceID) {
                 $channel = $state->guild->channels->create([
                     'name' => $state->user->username . ' Voice',
@@ -28,7 +28,19 @@ new Listener([
                     $channel->moveMember($state->user->id);
                     return array_push($GLOBALS['voice_save'], $channel->id);
                 });
+            } else {
+                if (!isset($GLOBALS['user_save'][$state->member->id]) || empty($GLOBALS['user_save'][$state->member->id])) {
+                    echo "\noui?";
+                    $GLOBALS['user_save'][$state->member->id] = time();
+                } else {
+                    $timer = time() - $GLOBALS['user_save'][$state->member->id];
+                    $GLOBALS['user_save'][$state->member->id] = 0;
+                }
             }
+        }
+
+        if ($timer) {
+            // Add dans la base de donner
         }
 
         foreach ($GLOBALS['voice_save'] as $id) {

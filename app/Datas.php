@@ -22,8 +22,15 @@ class Datas {
      */
     const TEMP_INVITE_ROLES = ['891707949997785148'];
 
+    /**
+     * 
+     */
+    const PERSONNEL_VOICE = ['818590927052472380'];
+
     public static function getGoodData(GuildRepository|RoleRepository $repo, Datas $data)
     {
-        
+        foreach ($data as $value) {
+            
+        }
     }
 }
