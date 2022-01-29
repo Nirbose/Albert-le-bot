@@ -6,6 +6,8 @@ use Discord\Discord;
 use Discord\Parts\Guild\Guild;
 use Discord\Parts\Interactions\Command\Command as SlashCommand;
 
+use function PHPSTORM_META\type;
+
 class Command
 {
 
@@ -101,6 +103,13 @@ class Command
     public array $slashOptions = [];
 
     /**
+     * Subs Command
+     * 
+     * @var array
+     */
+    public array $subs = [];
+
+    /**
      * Command Version
      *
      * @var integer
@@ -162,7 +171,7 @@ class Command
 
             $slashCommand = new SlashCommand(self::$discord, $attributes);
 
-            if (count($options['slashGuilds']) > 0) {
+            if ($options['slashGuilds'] && count($options['slashGuilds']) > 0) {
                 foreach ($options['slashGuilds'] as $guild) {
                     self::$discord->guilds->fetch($guild)->done(function (Guild $guild) use ($slashCommand) {
                         $guild->commands->save($slashCommand);

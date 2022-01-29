@@ -9,6 +9,7 @@ use Discord\Parts\Interactions\Interaction;
 class App {
 
     public $args = [];
+    public Message|Interaction $metadata;
 
     private static array $err = [
         'status' => false,
@@ -23,6 +24,8 @@ class App {
         if (!$command->slash) {
             $this->args = new Arguments($this->message, $this->command->args);
         }
+
+        $this->metadata = $message;
     }
 
     public function send(string $content, array $options = [])
@@ -33,6 +36,9 @@ class App {
             self::$err['status'] = false;
             $resp->setContent(self::$err['message']);
         }
+
+        if (isset($options['embeds'])) $resp->setEmbeds($options['embeds']);
+        if (isset($options['components'])) $resp->setComponents($options['components']);
 
         if ($this->command->slash) {
             return $this->message->respondWithMessage($resp);

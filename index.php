@@ -7,8 +7,6 @@ use App\Handler;
 use App\Namespaces\Presence;
 use Dotenv\Dotenv;
 use Discord\Discord;
-use Discord\Parts\Guild\Guild;
-use Discord\Parts\Interactions\Command\Command as SlashCommand;
 use Discord\Parts\User\Activity;
 use Discord\WebSockets\Intents;
 use Monolog\Logger;
@@ -16,6 +14,7 @@ use Monolog\Logger;
 Dotenv::createImmutable(__DIR__)->load();
 
 define("PREFIX", $_ENV["PREFIX"]);
+define("COLOR", hexdec($_ENV["COLOR"]));
 
 $client = new Discord([
     'token' => $_ENV['TOKEN'],
