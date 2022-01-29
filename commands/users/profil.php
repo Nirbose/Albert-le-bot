@@ -10,6 +10,7 @@ new Command([
     'slashType' => 2,
     'slashGuilds' => ['781105165754433537'],
     'run' => function (App $message) {
-        var_dump($message->metadata->user->id);
+        $result = $message->database->get('messages', ['authorID' => $message->metadata->data->target_id]);
+        var_dump(count($result));
     }
 ]);

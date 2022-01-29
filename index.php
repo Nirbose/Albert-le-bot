@@ -3,6 +3,7 @@
 include __DIR__.'/vendor/autoload.php';
 
 use App\Command;
+use App\Database;
 use App\Handler;
 use App\Namespaces\Presence;
 use Dotenv\Dotenv;
@@ -15,6 +16,8 @@ Dotenv::createImmutable(__DIR__)->load();
 
 define("PREFIX", $_ENV["PREFIX"]);
 define("COLOR", hexdec($_ENV["COLOR"]));
+
+include "./data/Tables.php";
 
 $client = new Discord([
     'token' => $_ENV['TOKEN'],

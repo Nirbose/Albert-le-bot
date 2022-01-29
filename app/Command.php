@@ -6,8 +6,6 @@ use Discord\Discord;
 use Discord\Parts\Guild\Guild;
 use Discord\Parts\Interactions\Command\Command as SlashCommand;
 
-use function PHPSTORM_META\type;
-
 class Command
 {
 

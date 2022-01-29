@@ -1,5 +1,6 @@
 .idea
 node_modules
+data/database.db
 ##### Windows
 # Windows thumbnail cache files
 Thumbs.db

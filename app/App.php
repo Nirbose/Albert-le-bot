@@ -10,6 +10,7 @@ class App {
 
     public $args = [];
     public Message|Interaction $metadata;
+    public Database $database;
 
     private static array $err = [
         'status' => false,
@@ -25,6 +26,7 @@ class App {
             $this->args = new Arguments($this->message, $this->command->args);
         }
 
+        $this->database = Database::new();
         $this->metadata = $message;
     }
 

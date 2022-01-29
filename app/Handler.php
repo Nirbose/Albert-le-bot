@@ -125,6 +125,14 @@ class Handler {
 
             $message->channel->sendMessage(MessageBuilder::new()->setContent('Que puis je faire pour vous ?')->addComponent($buttons));
         }
+
+        Database::new()->insert('messages', [
+            'message' => $message->content,
+            'authorID' => $message->author->id,
+            'channelID' => $message->channel->id,
+            'guildID' => $message->channel->guild->id,
+            'timestamp' => $message->timestamp
+        ]);
     }
 
 }
