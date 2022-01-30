@@ -15,5 +15,6 @@ Database::new()
     'id' => 'INTEGER PRIMARY KEY',
     'userID' => 'TEXT',
     'guildID' => 'TEXT',
+    'time' => 'TEXT',
     'timestamp' => 'TEXT'
 ]);
