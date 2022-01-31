@@ -2,8 +2,7 @@
 
 use App\App;
 use App\Command;
-use Discord\Builders\MessageBuilder;
-use Discord\Parts\Embed\Embed;
+use Discord\Parts\Channel\Message;
 
 new Command([
     'name' => 'messages',
@@ -22,18 +21,9 @@ new Command([
         ],
     ],
     'run' => function (App $message) {
-        $message->send('Hello World! ' . $message->args->truc);
-        $message->metadata->channel->sendMessage(MessageBuilder::new()->addEmbed(
-            [
-                'title' => "test",
-                'description' => "test",
-                'fields' => [
-                    [
-                        'name' => "\xE2\x80\x8C",
-                        'value' => "```diff\n- test```",
-                    ],
-                ]
-            ]
-        ));
+        $message->metadata->channel->messages->fetch("937286740929028106")->done(function (Message $message) {
+            var_dump($message);
+            $message->reply(hexdec("#25b8b8"));
+        });
     }
 ]);
