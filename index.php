@@ -32,12 +32,13 @@ try {
         
         echo "Bot is ready!", PHP_EOL;
 
-        new Presence($client, [
-            'status' => 'online',
-            'activity' => ['name' => 'les services de Nirbose', 'type' => Activity::TYPE_LISTENING]
-        ]);
+        $activity = new Activity($client, [
+            'name' => 'les services de Nirbose',
+            'type' => Activity::TYPE_LISTENING
+        ], true);
+        $client->updatePresence($activity, false, 'online');
 
-        (new Handler)->handler($client);
+        Handler::load($client);
         
     });
 

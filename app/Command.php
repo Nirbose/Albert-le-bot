@@ -185,7 +185,7 @@ class Command
         
     }
 
-    public static function getCommand() {
+    public static function getCommands() {
         return self::$commands;
     }
 

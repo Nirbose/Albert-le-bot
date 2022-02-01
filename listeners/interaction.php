@@ -1,9 +1,10 @@
 <?php
 
+use App\App;
+use App\Command;
 use App\Listener;
 use Discord\Builders\MessageBuilder;
 use Discord\Discord;
-use Discord\Helpers\Collection;
 use Discord\Parts\Interactions\Interaction;
 use Discord\WebSockets\Event;
 
@@ -11,6 +12,13 @@ new Listener([
     'listener' => Event::INTERACTION_CREATE,
     'run' => function(Interaction $interaction, Discord $discord) {
         
+        /** @var Command $command */
+        foreach (Command::getCommands() as $command) {
+            if ($interaction->data->name == $command->name) {
+                $command->run->call($interaction, new App($interaction, $command));
+            }
+        }
+
         // RULE BUTTON !
         if ($interaction->data->custom_id == "submit_rule") {
             if(!$interaction->member->roles->has('')) {
