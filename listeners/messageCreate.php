@@ -17,8 +17,8 @@ use Discord\WebSockets\Event;
 new Listener([
     'listener' => Event::MESSAGE_CREATE,
     'run' => function (Message $message, Discord $discord) {
-        if (str_starts_with($this->message->content, PREFIX)){
-            $without_prefix = explode(" ", substr($this->message->content, 1));
+        if (str_starts_with($message->content, PREFIX)){
+            $without_prefix = explode(" ", substr($message->content, 1));
 
             /** @var Command $command */
             foreach (Command::getCommands() as $command) {
@@ -26,29 +26,29 @@ new Listener([
                 // Handle eval command
                 if (str_starts_with(strtolower($without_prefix[0]), $command->name) || in_array(strtolower($without_prefix[0]), $command->aliases)){
 
-                    if ($command->permission && !Permissions::hasPermission($this->message->author, $command->permission)) {
-                        return $this->message->channel->sendMessage("Vous n'avez pas la permition requise");
+                    if ($command->permission && !Permissions::hasPermission($message->author, $command->permission)) {
+                        return $message->channel->sendMessage("Vous n'avez pas la permition requise");
                     }
 
-                    if ($command->ownerOnly && $this->message->author->id != $_ENV['OWNER_ID']) {
-                        return $this->message->channel->sendMessage("Vous n'êtes pas le propio.");
+                    if ($command->ownerOnly && $message->author->id != $_ENV['OWNER_ID']) {
+                        return $message->channel->sendMessage("Vous n'êtes pas le propio.");
                     } 
 
                     if ($command->boosterOnly) {
                         $findBoosterRole = false;
 
-                        foreach ($this->message->author->roles as $role) {
+                        foreach ($message->author->roles as $role) {
                             if (in_array($role->id, Datas::BOOSTER_ROLES)) {
                                 $findBoosterRole = true;
                             }
                         }
 
-                        if (Permissions::hasPermission($this->message->author, 'administrator')) {
+                        if (Permissions::hasPermission($message->author, 'administrator')) {
                             $findBoosterRole = true;
                         }
 
                         if (!$findBoosterRole) {
-                            return $this->message->channel->sendMessage("Vous n'êtes pas booster !");
+                            return $message->channel->sendMessage("Vous n'êtes pas booster !");
                         }
                     }
     
@@ -56,7 +56,7 @@ new Listener([
 
                     // Tkt c'est normal x)
                     // Il demande en premier arg un obj puis les args de la fonction, donc le pourquoi du comment le voila.
-                    $command->run->call($this->message, new App($this->message, $command));
+                    $command->run->call($message, new App($message, $command));
 
                     return $command;
     
@@ -86,7 +86,7 @@ new Listener([
         }
 
         Database::new()->insert('messages', [
-            'message' => $message->content,
+            'message' => $message->id,
             'authorID' => $message->author->id,
             'channelID' => $message->channel->id,
             'guildID' => $message->channel->guild->id,
