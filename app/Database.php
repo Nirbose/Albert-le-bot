@@ -96,4 +96,75 @@ class Database {
         return $data;
     }
 
+    /**
+     * select method
+     * 
+     * @param string $name
+     * @param array $where
+     * @return array
+     */
+    public function select(string $name, array $where): array
+    {
+        $query = "SELECT * FROM $name WHERE ";
+
+        foreach ($where as $key => $value) {
+            $query .= "$key = :$key AND ";
+        }
+
+        $query = rtrim($query, " AND ");
+
+        $stmt = $this::$db->prepare($query);
+
+        foreach ($where as $key => $value) {
+            $stmt->bindValue(":$key", $value);
+        }
+
+        $stmt = $stmt->execute();
+
+        $data = [];
+
+        while ($row = $stmt->fetchArray(SQLITE3_ASSOC)) {
+            $data[] = $row;
+        }
+
+        return $data;
+    }
+
+    /**
+     * update method
+     * 
+     * @param string $name
+     * @param array $values
+     * @param array $where
+     * @return void
+     */
+    public function update(string $name, array $values, array $where): void
+    {
+        $query = "UPDATE $name SET ";
+
+        foreach ($values as $key => $value) {
+            $query .= "$key = :$key, ";
+        }
+
+        $query = rtrim($query, ", ");
+
+        $query .= " WHERE ";
+
+        foreach ($where as $key => $value) {
+            $query .= "$key = :$key AND ";
+        }
+
+        $query = rtrim($query, " AND ");
+
+        $stmt = $this::$db->prepare($query);
+
+        foreach ($values as $key => $value) {
+            $stmt->bindValue(":$key", $value);
+        }
+
+        foreach ($where as $key => $value) {
+            $stmt->bindValue(":$key", $value);
+        }
+    }
+
 }
