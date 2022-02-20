@@ -3,8 +3,6 @@
 use App\App;
 use App\Command;
 use Carbon\Carbon;
-use Discord\Builders\MessageBuilder;
-use Discord\Parts\Channel\Message;
 
 new Command([
     'name' => 'profil',
@@ -13,6 +11,8 @@ new Command([
     'slashType' => 2,
     'slashGuilds' => ['781105165754433537'],
     'run' => function (App $message) {
+
+        // Calcule stats
         $result = $message->database->get('messages', ['authorID' => $message->metadata->data->target_id]);
         $storage = [];
         $data = [];
@@ -59,6 +59,7 @@ new Command([
 
         $member = $message->metadata->guild->members->get('id', $message->metadata->data->target_id);
 
+        // Envoie du message
         $embed = [
             'color' => COLOR,
             'author' => [
@@ -67,6 +68,18 @@ new Command([
             ],
             'description' => "Profil de " . $member . ". Membre `ACTIF` depuis le <t:" . Carbon::parse($member->joined_at)->timestamp . ">.",
             'fields' => [
+                [
+                    'name' => "\xE2\x80\x8C",
+                    'value' => "**Information Utilisateur**\n\n> **ID :** " . $member->user->id . "\n> **Nom d'Utilisateur :** " . $member->user->username,
+                    'inline' => true,
+                ],
+                [
+                    'name' => "\xE2\x80\x8C",
+                    'value' => "**Information Membre**\n\n> **Nom :** " . $member->nickname . "\n> **Statut :** " . $member->status . "\n> **Rôle :** " . ($member->roles[0] ?? "`Membre`") . "\n> **Statut de Jeu :** " . ($member->game->name ?? "`Aucun`"),
+                    'inline' => true,
+                ],
+
+                // Message Statistiques Embed :
                 [
                     'name' => "\xE2\x80\x8C",
                     'value' => "```diff\n- Stats Messages```",
@@ -80,6 +93,12 @@ new Command([
                     'name' => "\xE2\x80\x8C",
                     'value' => "📈 - **Graphiques**\n" . $graph,
                     'inline' => true,
+                ],
+
+                // Voice Statistiques Embed :
+                [
+                    'name' => "\xE2\x80\x8C",
+                    'value' => "```diff\n- Stats Voice```",
                 ],
             ],
         ];
