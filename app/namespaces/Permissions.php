@@ -2,7 +2,7 @@
 
 namespace App\Namespaces;
 
-use Discord\Parts\User\Member;
+use Discord\Parts\User\User;
 
 /**
  * Permissions classe
@@ -12,7 +12,7 @@ class Permissions {
     /**
      * $user varialble
      *
-     * @var Member
+     * @var User
      */
     private $user;
 
@@ -22,7 +22,7 @@ class Permissions {
      * @param string $permission
      * @return boolean
      */
-    public static function hasPermission(Member $user, string $permission): bool
+    public static function hasPermission(User $user, string $permission): bool
     {
         $result = false;
 

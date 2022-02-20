@@ -6,6 +6,7 @@ use App\Database;
 use App\Datas;
 use App\Listener;
 use App\Namespaces\Permissions;
+use Carbon\Carbon;
 use Discord\Builders\Components\ActionRow;
 use Discord\Builders\Components\Button;
 use Discord\Builders\MessageBuilder;
@@ -93,7 +94,8 @@ new Listener([
         ]);
 
         // LEVELS
-        $levels = Database::new()->select('levels', ['userID' => $message->author->id, 'guildID' => $message->channel->guild->id]);
+        // Regarde si le user est dans la table levels grace a la method get de Database
+        $levels = Database::new()->get('levels', ['userID' => $message->author->id, 'guildID' => $message->channel->guild->id]);
 
         if (!$levels) {
             Database::new()->insert('levels', [
@@ -104,22 +106,33 @@ new Listener([
                 'timestamp' => $message->timestamp
             ]);
         } else {
-            // Calcul de l'xp de façon exponentielle (^) et crée une suite pour connecter les xp et les levels
-            $xp = $levels[0]->xp + pow(($message->timestamp - $levels[0]->timestamp) / 3600, 2);
+            $levels = $levels[0];
 
-            // On regarde si on a atteint un niveau
-            if ($xp >= pow(($levels[0]->level + 1), 2)) {
+            $allM = Database::new()->get('messages', ['authorID' => $message->author->id, 'guildID' => $message->channel->guild->id]);
 
-                // On ajoute le niveau et remet l'xp à 0
-                Database::new()->update('levels', ['level' => $levels[0]->level + 1, 'xp' => 0], ['userID' => $message->author->id, 'guildID' => $message->channel->guild->id]);
+            // Calcul de l'xp de facon exponentielle en fonction du nombre de messages envoyés par le user et de son niveau
+            $xp = pow((count($allM) + 1), $levels['level']) * 0.0009;
 
-                // On envoie un message en mentionnant la personne et son niveau
-                $message->channel->sendMessage(MessageBuilder::new()->setContent($message->author . ' a atteint le niveau ' . $levels[0]->level + 1 . ' !'));
+            // On regarde si le user a atteint un niveau
+            if ($xp >= pow(($levels['level'] + 1), $levels['level'])) {
+
+                // On ajoute 1 au niveau
+                $levels['level']++;
+
+                // On reset le xp
+                $levels['xp'] = 0;
+
+                // On enregistre le niveau
+                Database::new()->update('levels', ['level' => $levels['level']], ['userID' => $message->author->id, 'guildID' => $message->channel->guild->id]);
+
+                // On envoie un message au user
+                $message->channel->sendMessage(MessageBuilder::new()->setContent('Bravo ! Vous avez atteint le niveau ' . $levels['level'] . ' !'));
+
             } else {
-
-                // On update les xp
+                // On enregistre le niveau
                 Database::new()->update('levels', ['xp' => $xp], ['userID' => $message->author->id, 'guildID' => $message->channel->guild->id]);
             }
+            
         }
     }
 ]);

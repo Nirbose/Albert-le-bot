@@ -24,6 +24,6 @@ Database::new()
     'userID' => 'TEXT',
     'guildID' => 'TEXT',
     'level' => 'INTEGER',
-    'xp' => 'INTEGER',
+    'xp' => 'FLOAT',
     'timestamp' => 'TEXT'
 ]);

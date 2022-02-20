@@ -131,19 +131,21 @@ class Database {
     }
 
     /**
-     * update method
+     * update table method SQLite3
      * 
      * @param string $name
      * @param array $values
      * @param array $where
      * @return void
+     * @throws \Exception
+     * @throws \SQLite3Exception
      */
     public function update(string $name, array $values, array $where): void
     {
         $query = "UPDATE $name SET ";
 
         foreach ($values as $key => $value) {
-            $query .= "$key = :$key, ";
+            $query .= "$key = $value, ";
         }
 
         $query = rtrim($query, ", ");
@@ -151,20 +153,15 @@ class Database {
         $query .= " WHERE ";
 
         foreach ($where as $key => $value) {
-            $query .= "$key = :$key AND ";
+            $query .= "$key = $value AND ";
         }
 
         $query = rtrim($query, " AND ");
 
         $stmt = $this::$db->prepare($query);
 
-        foreach ($values as $key => $value) {
-            $stmt->bindValue(":$key", $value);
-        }
+        $stmt->execute();
 
-        foreach ($where as $key => $value) {
-            $stmt->bindValue(":$key", $value);
-        }
     }
 
 }
