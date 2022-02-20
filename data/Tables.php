@@ -17,4 +17,13 @@ Database::new()
     'guildID' => 'TEXT',
     'time' => 'TEXT',
     'timestamp' => 'TEXT'
+])
+// Levels table creation
+->tableCreate('levels', [
+    'id' => 'INTEGER PRIMARY KEY',
+    'userID' => 'TEXT',
+    'guildID' => 'TEXT',
+    'level' => 'INTEGER',
+    'xp' => 'INTEGER',
+    'timestamp' => 'TEXT'
 ]);
