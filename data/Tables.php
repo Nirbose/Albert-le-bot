@@ -26,4 +26,12 @@ Database::new()
     'level' => 'INTEGER',
     'xp' => 'FLOAT',
     'timestamp' => 'TEXT'
+])
+// Quest table creation
+->tableCreate('quests', [
+    'id' => 'INTEGER PRIMARY KEY',
+    'guildID' => 'TEXT',
+    'level' => 'INTEGER',
+    'data' => 'TEXT',
+    'timestamp' => 'DATETIME'
 ]);

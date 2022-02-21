@@ -164,7 +164,7 @@ class Command
             if ($this->slashType == SlashCommand::CHAT_INPUT) {
                 $attributes['description'] = $this->description;
                 $attributes['options'] = $this->slashOptions;
-                $attributes['version'] = $this->version;
+                $attributes['version'] = $this->version ?? 1;
             }
 
             $slashCommand = new SlashCommand(self::$discord, $attributes);
