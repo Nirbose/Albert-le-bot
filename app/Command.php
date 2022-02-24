@@ -84,7 +84,13 @@ class Command
     public static function search(string $name): object
     {
         if (isset(self::$commands[$name])) {
-            return (object)self::$commands[$name];
+            return new self;
+        }
+
+        foreach (self::$commands as $command) {
+            if (in_array($name, $command['aliases'])) {
+                return new self;
+            }
         }
 
         return null;
@@ -199,17 +205,115 @@ class Command
     }
 
     /**
-     * Get
+     * Add Subcommand to command
      * 
      * @param string $name
+     * @param callable $callback
+     * @return self
      */
-    public function __get($name)
+    public function addSubcommand(string $name, callable $callback): self
     {
-        if ($this::$commands[$this::$name][$name] == "undefined") {
-            return null;
-        }
+        self::$commands[$this::$name]['subcommands'][$name]['run'] = $callback;
 
-        return $this::$commands[$this::$name][$name];
+        return new self;
+    }
+
+    /**
+     * Get Command Context
+     * 
+     * @return int|null
+     */
+    public function getContext(): ?int
+    {
+        return $this::$commands[$this::$name]['context'] ?? null;
+    }
+
+    /**
+     * Get Command Description
+     * 
+     * @return string|null
+     */
+    public function getDescription(): ?string
+    {
+        return $this::$commands[$this::$name]['description'] ?? null;
+    }
+
+    /**
+     * Get Command Usage
+     * 
+     * @return string|null
+     */
+    public function getUsage(): ?string
+    {
+        return $this::$commands[$this::$name]['usage'] ?? null;
+    }
+
+    /**
+     * Get Command Aliases
+     * 
+     * @return string[]|null
+     */
+    public function getAliases(): ?array
+    {
+        return $this::$commands[$this::$name]['aliases'] ?? null;
+    }
+
+    /**
+     * Get Command Category
+     * 
+     * @return string|null
+     */
+    public function getCategory(): ?string
+    {
+        return $this::$commands[$this::$name]['category'] ?? null;
+    }
+
+    /**
+     * Get Command Options
+     * 
+     * @return array|null
+     */
+    public function getOptions(): ?array
+    {
+        return $this::$commands[$this::$name]['options'] ?? null;
+    }
+
+    /**
+     * Get Command Type
+     * 
+     * @return int|null
+     */
+    public function getType(): ?int
+    {
+        return $this::$commands[$this::$name]['type'] ?? null;
+    }
+
+    /**
+     * Get Command Run
+     */
+    public function getRun()
+    {
+        return $this::$commands[$this::$name]['run'];
+    }
+
+    /**
+     * Get Command Guilds
+     * 
+     * @return string[]|null
+     */
+    public function getGuilds(): ?array
+    {
+        return $this::$commands[$this::$name]['guilds'] ?? null;
+    }
+
+    /**
+     * Get Subcommands
+     * 
+     * @return array|null
+     */
+    public function getSubcommands(): ?array
+    {
+        return $this::$commands[$this::$name]['subcommands'] ?? null;
     }
 
 }

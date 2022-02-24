@@ -26,10 +26,10 @@ new Listener([
             }
 
             /** @var Command $command */
-            if (!is_null($command->context) && $command->context != Context::MESSAGE) {
+            if (!is_null($command->getContext()) && @$command->getContext() != Context::MESSAGE) {
                 return;
             }
-            $command->run->call($message, $message, $discord);
+            $command->getRun()->call($message, $message, $discord);
         }
 
         // MESSAGES DE BONJOUR
