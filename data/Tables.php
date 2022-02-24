@@ -34,4 +34,12 @@ Database::new()
     'level' => 'INTEGER',
     'data' => 'TEXT',
     'timestamp' => 'DATETIME'
+])
+// Sentences table creation
+->tableCreate('sentences', [
+    'id' => 'INTEGER PRIMARY KEY',
+    'guildID' => 'TEXT',
+    'sentence' => 'TEXT',
+    'type' => 'VARCHAR(255)',
+    'timestamp' => 'DATETIME'
 ]);
