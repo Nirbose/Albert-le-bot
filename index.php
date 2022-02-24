@@ -42,7 +42,7 @@ try {
         
     });
 
-    Command::init_discord($client);
+    Command::create($client);
 
     foreach (glob("commands/*/*.php") as $filename) require_once $filename;
     foreach (glob("listeners/*.php") as $filename) require_once $filename;

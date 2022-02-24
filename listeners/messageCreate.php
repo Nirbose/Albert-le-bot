@@ -4,10 +4,7 @@ use App\App;
 use App\Command;
 use App\Context;
 use App\Database;
-use App\Datas;
 use App\Listener;
-use App\Namespaces\Permissions;
-use Carbon\Carbon;
 use Discord\Builders\Components\ActionRow;
 use Discord\Builders\Components\Button;
 use Discord\Builders\MessageBuilder;
@@ -32,9 +29,7 @@ new Listener([
             if (!is_null($command->context) && $command->context != Context::MESSAGE) {
                 return;
             }
-
-            $run = 'run';
-            $command->$run($message, $discord);
+            $command->run->call($message, $message, $discord);
         }
 
         // MESSAGES DE BONJOUR

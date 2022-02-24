@@ -42,4 +42,12 @@ Database::new()
     'sentence' => 'TEXT',
     'type' => 'VARCHAR(255)',
     'timestamp' => 'DATETIME'
+])
+// Role table creation
+->tableCreate('roles', [
+    'id' => 'INTEGER PRIMARY KEY',
+    'guildID' => 'TEXT',
+    'roleID' => 'TEXT',
+    'type' => 'VARCHAR(255)',
+    'timestamp' => 'DATETIME'
 ]);

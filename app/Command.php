@@ -20,16 +20,15 @@ enum Type: int {
  * Command class
  * 
  * @property string $name
- * @property string $description
- * @property string $usage
- * @property string $category
- * @property int $context
- * @property array $aliases
- * @property array $options
- * @property int $type
+ * @property string|null $description
+ * @property string|null $usage
+ * @property string|null $category
+ * @property int|null $context
+ * @property string[]|null $aliases
+ * @property array|null $options
+ * @property int|null $type
  * @property array $guilds
- * @property callable $run
- * 
+ * @property $run
  */
 class Command
 {
@@ -37,17 +36,17 @@ class Command
     /**
      * @var Discord|null
      */
-    private $discord = null;
+    private static $discord = null;
 
     /**
      * @var string
      */
-    private $name;
+    private static string $name;
 
     /**
      * @var array
      */
-    private array $commands = [];
+    private static array $commands = [];
 
     /**
      * Create command instance.
@@ -57,10 +56,8 @@ class Command
      */
     public static function create(Discord $discord): void
     {
-        $self = new self();
-
-        if ($self->discord === null) {
-            $self->discord = $discord;
+        if (self::$discord === null) {
+            self::$discord = $discord;
         }
     }
 
@@ -72,12 +69,10 @@ class Command
      */
     public static function add(string $name, callable $callback): self
     {
-        $self = new self();
+        self::$name = $name;
+        self::$commands[$name]['run'] = $callback;
 
-        $self->name = $name;
-        $self->commands[$name]['run'] = $callback;
-
-        return $self;
+        return new self;
     }
 
     /**
@@ -88,10 +83,8 @@ class Command
      */
     public static function search(string $name): object
     {
-        $self = new self();
-
-        if (isset($self->commands[$name])) {
-            return (object)$self->commands[$name];
+        if (isset(self::$commands[$name])) {
+            return (object)self::$commands[$name];
         }
 
         return null;
@@ -105,7 +98,7 @@ class Command
      */
     public function setDescription(string $name): self
     {
-        $this->commands[$this->name]['description'] = $name;
+        $this::$commands[$this::$name]['description'] = $name;
 
         return new static();
     }
@@ -117,7 +110,7 @@ class Command
      */
     public function setContext(Context $context): self
     {
-        $this->commands[$this->name]['context'] = $context;
+        $this::$commands[$this::$name]['context'] = $context;
 
         return new static();
     }
@@ -130,7 +123,7 @@ class Command
      */
     public function setUsage(string $usage): self
     {
-        $this->commands[$this->name]['usage'] = $usage;
+        $this::$commands[$this::$name]['usage'] = $usage;
 
         return new static();
     }
@@ -143,7 +136,7 @@ class Command
      */
     public function setAliases(string ...$aliases): self
     {
-        $this->commands[$this->name]['aliases'] = $aliases;
+        $this::$commands[$this::$name]['aliases'] = $aliases;
 
         return new static();
     }
@@ -156,7 +149,7 @@ class Command
      */
     public function setCategory(string $category): self
     {
-        $this->commands[$this->name]['category'] = $category;
+        $this::$commands[$this::$name]['category'] = $category;
 
         return new static();
     }
@@ -169,7 +162,7 @@ class Command
      */
     public function setOptions(array $options): self
     {
-        $this->commands[$this->name]['options'] = $options;
+        $this::$commands[$this::$name]['options'] = $options;
 
         return new static();
     }
@@ -180,12 +173,12 @@ class Command
      * @param Type|SlashTypeCommand $type
      * @return self
      */
-    public function setType(SlashTypeCommand $type): self
+    public function setType(Type|SlashTypeCommand $type): self
     {
         if ($type instanceof Type) {
-            $this->commands[$this->name]['type'] = $type->value;
+            $this::$commands[$this::$name]['type'] = $type->value;
         } else {
-            $this->commands[$this->name]['type'] = $type;
+            $this::$commands[$this::$name]['type'] = $type;
         }
 
         return new static();
@@ -200,7 +193,7 @@ class Command
      */
     public function setGuilds(string ...$guilds): self
     {
-        $this->commands[$this->name]['guilds'] = $guilds;
+        $this::$commands[$this::$name]['guilds'] = $guilds;
 
         return new static();
     }
@@ -212,7 +205,11 @@ class Command
      */
     public function __get($name)
     {
-        return $this->commands[$this->name][$name];
+        if ($this::$commands[$this::$name][$name] == "undefined") {
+            return null;
+        }
+
+        return $this::$commands[$this::$name][$name];
     }
 
 }
