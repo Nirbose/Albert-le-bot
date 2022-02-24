@@ -2,6 +2,7 @@
 
 use App\App;
 use App\Command;
+use App\Context;
 use App\Database;
 use App\Datas;
 use App\Listener;
@@ -21,47 +22,19 @@ new Listener([
         if (str_starts_with($message->content, PREFIX)) {
             $without_prefix = explode(" ", substr($message->content, 1));
 
-            /** @var Command $command */
-            foreach (Command::getCommands() as $command) {
+            $command = Command::search($without_prefix[0]);
 
-                // Handle eval command
-                if (str_starts_with(strtolower($without_prefix[0]), $command->name) || in_array(strtolower($without_prefix[0]), $command->aliases)) {
-
-                    if ($command->permission && !Permissions::hasPermission($message->author, $command->permission)) {
-                        return $message->channel->sendMessage("Vous n'avez pas la permition requise");
-                    }
-
-                    if ($command->ownerOnly && $message->author->id != $_ENV['OWNER_ID']) {
-                        return $message->channel->sendMessage("Vous n'êtes pas le propio.");
-                    }
-
-                    if ($command->boosterOnly) {
-                        $findBoosterRole = false;
-
-                        foreach ($message->author->roles as $role) {
-                            if (in_array($role->id, Datas::BOOSTER_ROLES)) {
-                                $findBoosterRole = true;
-                            }
-                        }
-
-                        if (Permissions::hasPermission($message->author, 'administrator')) {
-                            $findBoosterRole = true;
-                        }
-
-                        if (!$findBoosterRole) {
-                            return $message->channel->sendMessage("Vous n'êtes pas booster !");
-                        }
-                    }
-
-                    $rest = trim(substr(implode(" ", $without_prefix), strlen($command->name)));
-
-                    // Tkt c'est normal x)
-                    // Il demande en premier arg un obj puis les args de la fonction, donc le pourquoi du comment le voila.
-                    $command->run->call($message, new App($message, $command));
-
-                    return $command;
-                }
+            if (is_null($command)) {
+                return;
             }
+
+            /** @var Command $command */
+            if (!is_null($command->context) && $command->context != Context::MESSAGE) {
+                return;
+            }
+
+            $run = 'run';
+            $command->$run($message, $discord);
         }
 
         // MESSAGES DE BONJOUR
