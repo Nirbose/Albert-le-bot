@@ -18,15 +18,6 @@ Database::new()
     'time' => 'TEXT',
     'timestamp' => 'TEXT'
 ])
-// Levels table creation
-->tableCreate('levels', [
-    'id' => 'INTEGER PRIMARY KEY',
-    'userID' => 'TEXT',
-    'guildID' => 'TEXT',
-    'level' => 'INTEGER',
-    'xp' => 'FLOAT',
-    'timestamp' => 'TEXT'
-])
 // Quest table creation
 ->tableCreate('quests', [
     'id' => 'INTEGER PRIMARY KEY',
@@ -49,5 +40,15 @@ Database::new()
     'guildID' => 'TEXT',
     'roleID' => 'TEXT',
     'type' => 'VARCHAR(255)',
+    'timestamp' => 'DATETIME'
+])
+// Users table creation
+->tableCreate('users', [
+    'id' => 'INTEGER PRIMARY KEY',
+    'userID' => 'TEXT',
+    'guildID' => 'TEXT',
+    'level' => 'INTEGER',
+    'xp' => 'FLOAT',
+    'quest' => 'INTEGER',
     'timestamp' => 'DATETIME'
 ]);
