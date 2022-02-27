@@ -6,6 +6,7 @@ use App\Command;
 use App\Database;
 use App\Handler;
 use App\Namespaces\Presence;
+use DB\Database as DBDatabase;
 use Dotenv\Dotenv;
 use Discord\Discord;
 use Discord\Parts\User\Activity;
@@ -43,6 +44,7 @@ try {
     });
 
     Command::create($client);
+    DBDatabase::connect();
 
     foreach (glob("commands/*/*.php") as $filename) require_once $filename;
     foreach (glob("listeners/*.php") as $filename) require_once $filename;

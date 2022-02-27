@@ -1,49 +1,48 @@
 <?php
 
-use App\Database;
+use DB\Table;
 
-Database::new()
-->tableCreate('messages', [
+Table::create('messages', [
     'id' => 'INTEGER PRIMARY KEY',
     'message' => 'TEXT',
     'authorID' => 'TEXT',
     'channelID' => 'TEXT',
     'guildID' => 'TEXT',
     'timestamp' => 'TEXT'
-])
-->tableCreate('voice_times', [
+]);
+Table::create('voice_times', [
     'id' => 'INTEGER PRIMARY KEY',
     'userID' => 'TEXT',
     'guildID' => 'TEXT',
     'time' => 'TEXT',
     'timestamp' => 'TEXT'
-])
+]);
 // Quest table creation
-->tableCreate('quests', [
+Table::create('quests', [
     'id' => 'INTEGER PRIMARY KEY',
     'guildID' => 'TEXT',
     'level' => 'INTEGER',
     'data' => 'TEXT',
     'timestamp' => 'DATETIME'
-])
+]);
 // Sentences table creation
-->tableCreate('sentences', [
+Table::create('sentences', [
     'id' => 'INTEGER PRIMARY KEY',
     'guildID' => 'TEXT',
     'sentence' => 'TEXT',
     'type' => 'VARCHAR(255)',
     'timestamp' => 'DATETIME'
-])
+]);
 // Role table creation
-->tableCreate('roles', [
+Table::create('roles', [
     'id' => 'INTEGER PRIMARY KEY',
     'guildID' => 'TEXT',
     'roleID' => 'TEXT',
     'type' => 'VARCHAR(255)',
     'timestamp' => 'DATETIME'
-])
+]);
 // Users table creation
-->tableCreate('users', [
+Table::create('users', [
     'id' => 'INTEGER PRIMARY KEY',
     'userID' => 'TEXT',
     'guildID' => 'TEXT',
