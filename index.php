@@ -4,6 +4,7 @@ include __DIR__.'/vendor/autoload.php';
 
 use App\Command;
 use App\Database;
+use App\Database\DB;
 use App\Handler;
 use App\Namespaces\Presence;
 use DB\Database as DBDatabase;
@@ -11,14 +12,13 @@ use Dotenv\Dotenv;
 use Discord\Discord;
 use Discord\Parts\User\Activity;
 use Discord\WebSockets\Intents;
+use Illuminate\Database\Capsule\Manager as Capsule;
 use Monolog\Logger;
 
 Dotenv::createImmutable(__DIR__)->load();
 
 define("PREFIX", $_ENV["PREFIX"]);
 define("COLOR", hexdec($_ENV["COLOR"]));
-
-include "./data/Tables.php";
 
 $client = new Discord([
     'token' => $_ENV['TOKEN'],
@@ -44,7 +44,8 @@ try {
     });
 
     Command::create($client);
-    DBDatabase::connect();
+    
+    DB::create();
 
     foreach (glob("commands/*/*.php") as $filename) require_once $filename;
     foreach (glob("listeners/*.php") as $filename) require_once $filename;

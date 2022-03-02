@@ -1,6 +1,7 @@
 .idea
 node_modules
 data/database.db
+.vscode
 ##### Windows
 # Windows thumbnail cache files
 Thumbs.db

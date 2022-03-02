@@ -3,8 +3,9 @@
 use App\App;
 use App\Command;
 use App\Context;
-use App\Database;
+use App\Database\DB;
 use App\Listener;
+use DB\Database;
 use Discord\Builders\Components\ActionRow;
 use Discord\Builders\Components\Button;
 use Discord\Builders\MessageBuilder;
@@ -12,6 +13,7 @@ use Discord\Discord;
 use Discord\Parts\Channel\Message;
 use Discord\Parts\Interactions\Interaction;
 use Discord\WebSockets\Event;
+use Illuminate\Database\Capsule\Manager as Capsule;
 
 new Listener([
     'listener' => Event::MESSAGE_CREATE,
@@ -53,20 +55,28 @@ new Listener([
             $message->channel->sendMessage(MessageBuilder::new()->setContent('Que puis je faire pour vous ?')->addComponent($buttons));
         }
 
-        Database::new()->insert('messages', [
-            'message' => $message->id,
+        // Insert a message
+        $r = DB::table('messages')->insert([
+            'message' => $message->content,
             'authorID' => $message->author->id,
             'channelID' => $message->channel->id,
             'guildID' => $message->channel->guild->id,
             'timestamp' => $message->timestamp
         ]);
 
+        return;
+
+        $db = DB::table('users', ['userID']);
+
         // LEVELS
-        $levels = Database::new()->get('levels', ['userID' => $message->author->id, 'guildID' => $message->channel->guild->id]);
+        $levels = $db->where([
+            'userID' => $message->author->id,
+            'guildID' => $message->channel->guild->id
+        ]);
         
         // Regarde si il a deja un level
         if (!$levels) {
-            Database::new()->insert('levels', [
+            $db->insert([
                 'userID' => $message->author->id,
                 'guildID' => $message->channel->guild->id,
                 'level' => 1,
@@ -79,7 +89,7 @@ new Listener([
             // Puis regarde il a attent 100% de xp
             // Si oui, augmente le level
             // Et supprime l'xp
-            $level = $levels[0];
+            $level = $levels->first();
 
             $xp = $level['xp'] + 90.5;
 
@@ -95,7 +105,10 @@ new Listener([
                 $level['xp'] = $xp;
             }
 
-            Database::new()->update('levels', ['level' => $level['level'], 'xp' => $level['xp']], ['userID' => $message->author->id, 'guildID' => $message->channel->guild->id]);
+            $db->where([
+                'userID' => $message->author->id,
+                'guildID' => $message->channel->guild->id
+            ])->update($level);
 
         }
 
