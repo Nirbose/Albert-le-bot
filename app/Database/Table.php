@@ -66,8 +66,8 @@ class Table {
 
         $stmt = $this->db->prepare($query);
 
-        foreach ($values as $i => $value) {
-            $stmt->bindValue($i + 1, $value);
+        for ($i = 0; $i < count($values); $i++) {
+            $stmt->bindValue($i + 1, $values[$i]);
         }
 
         foreach ($where as $i => $value) {
@@ -88,15 +88,15 @@ class Table {
         $this->data = [];
         $this->where = $where;
 
-        $query = "SELECT * FROM {$this->table} WHERE " . implode(" AND ", array_map(function ($column) {
-            return "{$column} = ?";
-        }, array_keys($where)));
+        $query = "SELECT * FROM {$this->table} WHERE ";
+
+        foreach ($where as $column => $value) {
+            $query .= "{$column} = {$value} AND ";
+        }
+
+        $query = rtrim($query, " AND ");
 
         $stmt = $this->db->prepare($query);
-
-        foreach ($where as $i => $value) {
-            $stmt->bindValue($i + 1, $value);
-        }
 
         $result = $stmt->execute();
 

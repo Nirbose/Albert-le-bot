@@ -6,24 +6,27 @@ namespace App\Database;
 class Schema {
 
     private \SQLite3 $db;
-    private $table = null;
+    protected static array $columns = [];
 
     public function __construct(\SQLite3 $db)
     {
         $this->db = $db;
     }
 
-    public function create(string $table, array $columns)
+    /**
+     * Create table
+     *
+     * @param string $table
+     * @param callable $callback
+     * @return void
+     */
+    public function create(string $table, callable $columns)
     {
+        $columns(new Blueprint($this->db));
+
         $this->table = $table;
-        $this->columns = $columns;
 
-        $this->db->exec("CREATE TABLE IF NOT EXISTS {$this->table} (
-            id INTEGER PRIMARY KEY,
-            " . implode(", ", array_keys($this->columns)) . "
-        )");
-
-        return $this;
+        $this->db->exec("CREATE TABLE IF NOT EXISTS {$table} (" . implode(", ", $this::$columns) . ");");
     }
 
     public function drop(string $table)

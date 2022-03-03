@@ -2,6 +2,19 @@
 
 // use DB\Table;
 
+use App\Database\Blueprint;
+use App\Database\DB;
+
+DB::schema()->create('users', function (Blueprint $table) {
+    $table->id();
+    $table->varchar('userID');
+    $table->varchar('guildID');
+    $table->int('level');
+    $table->float('xp');
+    $table->int('quest');
+    $table->timestamp();
+});
+
 // Table::create('messages', [
 //     'id' => 'INTEGER PRIMARY KEY',
 //     'message' => 'TEXT',

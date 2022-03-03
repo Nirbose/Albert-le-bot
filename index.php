@@ -12,7 +12,6 @@ use Dotenv\Dotenv;
 use Discord\Discord;
 use Discord\Parts\User\Activity;
 use Discord\WebSockets\Intents;
-use Illuminate\Database\Capsule\Manager as Capsule;
 use Monolog\Logger;
 
 Dotenv::createImmutable(__DIR__)->load();
@@ -46,6 +45,7 @@ try {
     Command::create($client);
     
     DB::create();
+    require __DIR__.'/data/Migration.php';
 
     foreach (glob("commands/*/*.php") as $filename) require_once $filename;
     foreach (glob("listeners/*.php") as $filename) require_once $filename;

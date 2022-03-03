@@ -64,8 +64,6 @@ new Listener([
             'timestamp' => $message->timestamp
         ]);
 
-        return;
-
         $db = DB::table('users', ['userID']);
 
         // LEVELS
@@ -75,7 +73,7 @@ new Listener([
         ]);
         
         // Regarde si il a deja un level
-        if (!$levels) {
+        if (!$levels->get()) {
             $db->insert([
                 'userID' => $message->author->id,
                 'guildID' => $message->channel->guild->id,
@@ -90,7 +88,7 @@ new Listener([
             // Si oui, augmente le level
             // Et supprime l'xp
             $level = $levels->first();
-
+            
             $xp = $level['xp'] + 90.5;
 
             $xp_percent = $xp / (pow(($level['level'] + 1), 2) * 100);
