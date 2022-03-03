@@ -10,6 +10,7 @@ class Schema {
 
     public function __construct(\SQLite3 $db)
     {
+        $this::$columns = [];
         $this->db = $db;
     }
 

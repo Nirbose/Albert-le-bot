@@ -15,52 +15,44 @@ DB::schema()->create('users', function (Blueprint $table) {
     $table->timestamp();
 });
 
-// Table::create('messages', [
-//     'id' => 'INTEGER PRIMARY KEY',
-//     'message' => 'TEXT',
-//     'authorID' => 'TEXT',
-//     'channelID' => 'TEXT',
-//     'guildID' => 'TEXT',
-//     'timestamp' => 'TEXT'
-// ]);
-// Table::create('voice_times', [
-//     'id' => 'INTEGER PRIMARY KEY',
-//     'userID' => 'TEXT',
-//     'guildID' => 'TEXT',
-//     'time' => 'TEXT',
-//     'timestamp' => 'TEXT'
-// ]);
-// Quest table creation
-// Table::create('quests', [
-//     'id' => 'INTEGER PRIMARY KEY',
-//     'guildID' => 'TEXT',
-//     'level' => 'INTEGER',
-//     'data' => 'TEXT',
-//     'timestamp' => 'DATETIME'
-// ]);
-// Sentences table creation
-// Table::create('sentences', [
-//     'id' => 'INTEGER PRIMARY KEY',
-//     'guildID' => 'TEXT',
-//     'sentence' => 'TEXT',
-//     'type' => 'VARCHAR(255)',
-//     'timestamp' => 'DATETIME'
-// ]);
-// Role table creation
-// Table::create('roles', [
-//     'id' => 'INTEGER PRIMARY KEY',
-//     'guildID' => 'TEXT',
-//     'roleID' => 'TEXT',
-//     'type' => 'VARCHAR(255)',
-//     'timestamp' => 'DATETIME'
-// ]);
-// Users table creation
-// Table::create('users', [
-//     'id' => 'INTEGER PRIMARY KEY',
-//     'userID' => 'TEXT',
-//     'guildID' => 'TEXT',
-//     'level' => 'INTEGER',
-//     'xp' => 'FLOAT',
-//     'quest' => 'INTEGER',
-//     'timestamp' => 'DATETIME'
-// ]);
+DB::schema()->create('messages', function (Blueprint $table) {
+    $table->id();
+    $table->varchar('message');
+    $table->varchar('authorID');
+    $table->varchar('channelID');
+    $table->varchar('guildID');
+    $table->timestamp();
+});
+
+DB::schema()->create('quests', function (Blueprint $table) {
+    $table->id();
+    $table->varchar('userID');
+    $table->varchar('guildID');
+    $table->int('quest');
+    $table->json('datas');
+    $table->timestamp();
+});
+
+DB::schema()->create('sentences', function (Blueprint $table) {
+    $table->id();
+    $table->varchar('guildID');
+    $table->text('sentence');
+    $table->varchar('type');
+    $table->timestamp();
+});
+
+DB::schema()->create('roles', function (Blueprint $table) {
+    $table->id();
+    $table->varchar('guildID');
+    $table->varchar('roleID');
+    $table->varchar('name');
+    $table->timestamp();
+});
+
+DB::schema()->create('voice_times', function (Blueprint $table) {
+    $table->id();
+    $table->varchar('guildID');
+    $table->varchar('userID');
+    $table->int('time');
+    $table->timestamp();
+});

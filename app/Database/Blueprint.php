@@ -72,5 +72,15 @@ class Blueprint extends Schema {
         $this::$columns[] = 'timestamp DATETIME';
     }
 
+    /**
+     * insert JSON in $columns
+     * 
+     * @param string $name
+     * @return void
+     */
+    public function json(string $name)
+    {
+        $this::$columns[] = "{$name} JSON";
+    }
 
 }
