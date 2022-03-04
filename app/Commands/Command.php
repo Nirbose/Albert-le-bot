@@ -73,6 +73,7 @@ class Command
     public static function add(string $name, callable $callback): self
     {
         self::$name = $name;
+        self::$commands[$name]['name'] = $name;
         self::$commands[$name]['run'] = $callback;
 
         return new self;

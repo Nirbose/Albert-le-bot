@@ -1,7 +1,7 @@
 <?php
 
 use App\App;
-use App\Command;
+use App\Commands\Command;
 use App\Listener;
 use Discord\Builders\MessageBuilder;
 use Discord\Discord;

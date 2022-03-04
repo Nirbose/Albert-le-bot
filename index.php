@@ -7,7 +7,6 @@ use App\Database\DB;
 use App\Handler;
 use Dotenv\Dotenv;
 use Discord\Discord;
-use Discord\Parts\User\Activity;
 use Discord\WebSockets\Intents;
 use Monolog\Logger;
 
@@ -23,29 +22,17 @@ $client = new Discord([
     'intents' => Intents::getAllIntents()
 ]);
 
-try {
+foreach (glob("commands/*/*.php") as $filename) require_once $filename;
+foreach (glob("listeners/*.php") as $filename) require_once $filename;
 
-    $client->on('ready', function (Discord $client) {
-        
-        echo "Bot is ready!", PHP_EOL;
+Handler::load($client);
 
-        $activity = new Activity($client, [
-            'name' => 'les services de Nirbose',
-            'type' => Activity::TYPE_LISTENING
-        ], true);
-        $client->updatePresence($activity, false, 'online');
-
-        Handler::load($client);
-        
-    });
-
-    Command::create($client);
+Command::create($client);
     
-    DB::create();
-    require __DIR__.'/data/Migration.php';
+DB::create();
+require __DIR__.'/data/Migration.php';
 
-    foreach (glob("commands/*/*.php") as $filename) require_once $filename;
-    foreach (glob("listeners/*.php") as $filename) require_once $filename;
+try {
 
     $client->run();
 } catch (\Discord\Exceptions\IntentException $e) {

@@ -31,4 +31,31 @@ class CommandBuilder {
         }
     }
 
+    public function isSlash(): bool
+    {
+        return $this->context === Context::SLASH->value;
+    }
+
+    /**
+     * Build command for slash command
+     *
+     * @return array
+     */
+    public function slashBuilder(): array
+    {
+        $build = [
+            'type' => $this->type,
+            'name' => $this->name,
+            'description' => $this->description,
+        ];
+
+        if ($this->type !== 1) {
+            return $build;
+        }
+
+        $build['options'] = $this->options;
+
+        return $build;
+    }
+
 }

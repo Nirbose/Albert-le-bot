@@ -13,4 +13,5 @@ Command::add('sentence', function (Message $message) {
     CommandOption::new('sentence', 'sentence to add')
     ->setRequired(true)
 )
-->setContext(Context::SLASH);
+->setContext(Context::SLASH)
+->setGuilds('781105165754433537');
