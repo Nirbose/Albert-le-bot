@@ -11,11 +11,11 @@ use Discord\WebSockets\Event;
 new Listener([
     'listener' => Event::INTERACTION_CREATE,
     'run' => function(Interaction $interaction, Discord $discord) {
-        
-        /** @var Command $command */
-        foreach (Command::getCommands() as $command) {
-            if ($interaction->data->name == $command->name) {
-                $command->run->call($interaction, new App($interaction, $command));
+        if ($interaction->type === 2) {
+            $cmd = Command::search($interaction->data->name);
+
+            if ($cmd) {
+                $cmd['run']->call($interaction, $interaction, $discord);
             }
         }
 

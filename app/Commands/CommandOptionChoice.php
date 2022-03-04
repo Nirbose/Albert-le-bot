@@ -9,33 +9,12 @@ class CommandOptionChoice {
      */
     private static array $builder = [];
 
-    public static function new(): self
-    {
-        return new self();
-    }
-
-    /**
-     * Set Choice name
-     * 
-     * @param string $name
-     * @return self
-     */
-    public function setName(string $name): self
+    public static function new(string $name, string|int $value): self
     {
         self::$builder['name'] = $name;
-        return $this;
-    }
+        self::$builder['value'] = $value;
 
-    /**
-     * Set Choice description
-     * 
-     * @param string|int|double $description
-     * @return self
-     */
-    public function setValue(string|int $description): self
-    {
-        self::$builder['description'] = $description;
-        return $this;
+        return new self();
     }
 
     /**

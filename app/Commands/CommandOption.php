@@ -31,12 +31,12 @@ enum ChannelType: int {
 class CommandOption
 {
 
+    private static string $id;
+
     /**
      * @var array $builder
      */
-    private static array $builder = [
-        'type' => CommandOptionType::STRING,
-    ];
+    private static array $builder = [];
 
     /**
      * @var array $types
@@ -70,8 +70,10 @@ class CommandOption
             throw new \Exception('Command option description must be between 1 and 100 characters.');
         }
 
-        self::$builder['name'] = $name;
-        self::$builder['description'] = $description;
+        self::$id = uniqid();
+        self::$builder[self::$id]['type'] = CommandOptionType::STRING->value;
+        self::$builder[self::$id]['name'] = $name;
+        self::$builder[self::$id]['description'] = $description;
 
         return new self();
     }
@@ -79,17 +81,12 @@ class CommandOption
     /**
      * Set option type
      * 
-     * @param string|CommandOptionType $type
+     * @param CommandOptionType $type
      * @return self
-     * @throws \Exception
      */
-    public function setType(string|CommandOptionType $type): self
+    public function setType(CommandOptionType $type): self
     {
-        if (!in_array($type, $this->types)) {
-            throw new \Exception('Invalid type');
-        }
-
-        self::$builder['type'] = $type;
+        self::$builder[self::$id]['type'] = $type->value;
 
         return $this;
     }
@@ -97,7 +94,7 @@ class CommandOption
     /**
      * Set option choices
      * 
-     * @param array|CommandOptionChoice $choices
+     * @param array|CommandOptionChoice[] $choices
      * @return self
      */
     public function setChoices(array|CommandOptionChoice ...$choices): self
@@ -106,10 +103,12 @@ class CommandOption
             throw new \Exception('Maximum of 25 choices allowed.');
         }
 
-        if ($choices instanceof CommandOptionChoice) {
-            self::$builder['choices'][] = $choices->getBuilder();
-        } else {
-            self::$builder['choices'] = $choices;
+        foreach ($choices as $choice) {
+            if ($choice instanceof CommandOptionChoice) {
+                self::$builder[self::$id]['choices'][] = $choice->getBuilder();
+            } else {
+                self::$builder[self::$id]['choices'][] = $choice;
+            }
         }
 
         return $this;
@@ -124,9 +123,9 @@ class CommandOption
     public function setChannelsTypes(array|ChannelType ...$types): self
     {
         if ($types instanceof ChannelType) {
-            self::$builder['channelsTypes'][] = $types->getValue();
+            self::$builder[self::$id]['channelsTypes'][] = $types->getValue();
         } else {
-            self::$builder['channelsTypes'] = $types;
+            self::$builder[self::$id]['channelsTypes'] = $types;
         }
 
         return $this;
@@ -140,7 +139,7 @@ class CommandOption
      */
     public function setRequired(bool $required): self
     {
-        self::$builder['required'] = $required;
+        self::$builder[self::$id]['required'] = $required;
         return $this;
     }
 
@@ -152,7 +151,7 @@ class CommandOption
      */
     public function setMin(int $min): self
     {
-        self::$builder['min'] = $min;
+        self::$builder[self::$id]['min_value'] = $min;
         return $this;
     }
 
@@ -164,7 +163,7 @@ class CommandOption
      */
     public function setMax(int $max): self
     {
-        self::$builder['max'] = $max;
+        self::$builder[self::$id]['max_value'] = $max;
         return $this;
     }
 
@@ -176,7 +175,7 @@ class CommandOption
      */
     public function setAutocomplete(bool $autocomplete): self
     {
-        self::$builder['autocomplete'] = $autocomplete;
+        self::$builder[self::$id]['autocomplete'] = $autocomplete;
         return $this;
     }
 

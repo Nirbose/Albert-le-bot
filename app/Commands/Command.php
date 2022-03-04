@@ -167,16 +167,24 @@ class Command
     /**
      * set Options of command
      * 
-     * @param array|CommandOption $options
+     * @param array|CommandOption[] $options
      * @return self
      */
     public function setOptions(array|CommandOption ...$options): self
     {
-        if ($options instanceof CommandOption) {
-            $options = (new CommandOption())->getBuilder();
-        } else {
-            $options = $options;
+
+        foreach ($options as $option) {
+            if ($option instanceof CommandOption) {
+                foreach ($option->getBuilder() as $value) {
+                    self::$commands[$this::$name]['options'][] = $value;
+                }
+                break;
+            } else {
+                $this::$commands[$this::$name]['options'][] = $option;
+            }
         }
+
+        var_dump($this::$commands[$this::$name]['options']);
 
         return new static();
     }
