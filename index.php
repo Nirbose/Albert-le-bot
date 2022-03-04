@@ -2,12 +2,9 @@
 
 include __DIR__.'/vendor/autoload.php';
 
-use App\Command;
-use App\Database;
+use App\Commands\Command;
 use App\Database\DB;
 use App\Handler;
-use App\Namespaces\Presence;
-use DB\Database as DBDatabase;
 use Dotenv\Dotenv;
 use Discord\Discord;
 use Discord\Parts\User\Activity;

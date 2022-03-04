@@ -1,7 +1,7 @@
 <?php
 
-use App\Command;
-use App\Type;
+use App\Commands\Command;
+use App\Commands\Type;
 use Discord\Parts\Channel\Message;
 
 Command::add(

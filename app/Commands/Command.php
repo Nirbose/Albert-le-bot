@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Commands;
 
 use Discord\Discord;
 use Discord\Parts\Interactions\Command\Command as SlashTypeCommand;
@@ -29,6 +29,9 @@ enum Type: int {
  * @property int|null $type
  * @property array $guilds
  * @property $run
+ * 
+ * @method string setDescription(string $description)
+ * @method Context setContext()
  */
 class Command
 {
@@ -79,17 +82,17 @@ class Command
      * Search command by name
      * 
      * @param string $name
-     * @return object|null
+     * @return array|null
      */
-    public static function search(string $name): object
+    public static function search(string $name): array
     {
         if (isset(self::$commands[$name])) {
-            return new self;
+            return self::$commands[$name];
         }
 
         foreach (self::$commands as $command) {
             if (in_array($name, $command['aliases'])) {
-                return new self;
+                return self::$commands[$name];
             }
         }
 
@@ -116,7 +119,7 @@ class Command
      */
     public function setContext(Context $context): self
     {
-        $this::$commands[$this::$name]['context'] = $context;
+        $this::$commands[$this::$name]['context'] = $context->value;
 
         return new static();
     }
@@ -163,12 +166,16 @@ class Command
     /**
      * set Options of command
      * 
-     * @param array $options
+     * @param array|CommandOption $options
      * @return self
      */
-    public function setOptions(array $options): self
+    public function setOptions(array|CommandOption ...$options): self
     {
-        $this::$commands[$this::$name]['options'] = $options;
+        if ($options instanceof CommandOption) {
+            $options = (new CommandOption())->getBuilder();
+        } else {
+            $options = $options;
+        }
 
         return new static();
     }
@@ -219,101 +226,13 @@ class Command
     }
 
     /**
-     * Get Command Context
+     * Get commands
      * 
-     * @return int|null
+     * @return array
      */
-    public function getContext(): ?int
+    public static function getCommands(): array
     {
-        return $this::$commands[$this::$name]['context'] ?? null;
-    }
-
-    /**
-     * Get Command Description
-     * 
-     * @return string|null
-     */
-    public function getDescription(): ?string
-    {
-        return $this::$commands[$this::$name]['description'] ?? null;
-    }
-
-    /**
-     * Get Command Usage
-     * 
-     * @return string|null
-     */
-    public function getUsage(): ?string
-    {
-        return $this::$commands[$this::$name]['usage'] ?? null;
-    }
-
-    /**
-     * Get Command Aliases
-     * 
-     * @return string[]|null
-     */
-    public function getAliases(): ?array
-    {
-        return $this::$commands[$this::$name]['aliases'] ?? null;
-    }
-
-    /**
-     * Get Command Category
-     * 
-     * @return string|null
-     */
-    public function getCategory(): ?string
-    {
-        return $this::$commands[$this::$name]['category'] ?? null;
-    }
-
-    /**
-     * Get Command Options
-     * 
-     * @return array|null
-     */
-    public function getOptions(): ?array
-    {
-        return $this::$commands[$this::$name]['options'] ?? null;
-    }
-
-    /**
-     * Get Command Type
-     * 
-     * @return int|null
-     */
-    public function getType(): ?int
-    {
-        return $this::$commands[$this::$name]['type'] ?? null;
-    }
-
-    /**
-     * Get Command Run
-     */
-    public function getRun()
-    {
-        return $this::$commands[$this::$name]['run'];
-    }
-
-    /**
-     * Get Command Guilds
-     * 
-     * @return string[]|null
-     */
-    public function getGuilds(): ?array
-    {
-        return $this::$commands[$this::$name]['guilds'] ?? null;
-    }
-
-    /**
-     * Get Subcommands
-     * 
-     * @return array|null
-     */
-    public function getSubcommands(): ?array
-    {
-        return $this::$commands[$this::$name]['subcommands'] ?? null;
+        return self::$commands;
     }
 
 }

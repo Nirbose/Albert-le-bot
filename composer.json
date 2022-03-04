@@ -6,6 +6,7 @@
         }
     },
     "require": {
+        "php": ">=8.0",
         "vlucas/phpdotenv": "^5.3",
         "team-reflex/discord-php": "^7.0",
         "nesbot/carbon": "^2.57"

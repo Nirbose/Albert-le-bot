@@ -1,7 +1,7 @@
 <?php
 
 use App\App;
-use App\Command;
+use App\Commands\Command;
 
 new Command([
     'name' => 'quest',

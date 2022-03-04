@@ -1,11 +1,11 @@
 <?php
 
 use App\App;
-use App\Command;
-use App\Context;
+use App\Commands\Command;
+use App\Commands\CommandBuilder;
+use App\Commands\Context;
 use App\Database\DB;
 use App\Listener;
-use DB\Database;
 use Discord\Builders\Components\ActionRow;
 use Discord\Builders\Components\Button;
 use Discord\Builders\MessageBuilder;
@@ -27,11 +27,13 @@ new Listener([
                 return;
             }
 
+            $cmd = new CommandBuilder($command);
+
             /** @var Command $command */
-            if (!is_null($command->getContext()) && @$command->getContext() != Context::MESSAGE) {
+            if ($cmd->context != Context::MESSAGE->value) {
                 return;
             }
-            $command->getRun()->call($message, $message, $discord);
+            $command['run']->call($message, $message, $discord);
         }
 
         // MESSAGES DE BONJOUR
