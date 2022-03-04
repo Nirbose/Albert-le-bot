@@ -47,32 +47,26 @@ class Table {
      */
     public function update(array $data, ?array $where = []): bool
     {
-        $columns = array_keys($data);
-        $values = array_values($data);
+        $query = "UPDATE {$this->table} SET ";
 
-        $query = "UPDATE {$this->table} SET " . implode(", ", array_map(function ($column) {
-            return "{$column} = ?";
-        }, $columns));
-
-        if (count($this->where)) {
-            $query .= " WHERE " . implode(" AND ", array_map(function ($column) {
-                return "{$column} = ?";
-            }, array_keys($this->where)));
-        } else {
-            $query .= " WHERE " . implode(" AND ", array_map(function ($column) {
-                return "{$column} = ?";
-            }, array_keys($where)));
+        for ($i = 0; $i < count($data); $i++) {
+            $query .= array_keys($data)[$i] . " = " . array_values($data)[$i] . ", ";
         }
+        
+        $query = rtrim($query, ", ");
+
+        if (!empty($where) || !empty($this->where)) {
+            $query .= " WHERE ";
+            $where = !empty($where) ? $where : $this->where;
+        }
+
+        for ($i = 0; $i < count($where); $i++) {
+            $query .= array_keys($where)[$i] . " = " . array_values($where)[$i] . " AND ";
+        }
+
+        $query = rtrim($query, " AND ");
 
         $stmt = $this->db->prepare($query);
-
-        for ($i = 0; $i < count($values); $i++) {
-            $stmt->bindValue($i + 1, $values[$i]);
-        }
-
-        foreach ($where as $i => $value) {
-            $stmt->bindValue($i + count($values) + 1, $value);
-        }
 
         return (bool)$stmt->execute();
     }

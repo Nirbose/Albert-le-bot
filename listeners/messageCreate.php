@@ -103,10 +103,13 @@ new Listener([
                 $level['xp'] = $xp;
             }
 
-            $db->where([
+            $r = $db->where([
                 'userID' => $message->author->id,
                 'guildID' => $message->channel->guild->id
-            ])->update($level);
+            ])->update([
+                'level' => $level['level'],
+                'xp' => $level['xp']
+            ]);
 
         }
 
