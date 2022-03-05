@@ -184,8 +184,6 @@ class Command
             }
         }
 
-        var_dump($this::$commands[$this::$name]['options']);
-
         return new static();
     }
 

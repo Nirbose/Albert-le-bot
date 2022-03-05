@@ -4,6 +4,8 @@ namespace App\Commands;
 
 class CommandOptionChoice {
 
+    private static string $uid;
+
     /**
      * @var array $builder
      */
@@ -11,8 +13,9 @@ class CommandOptionChoice {
 
     public static function new(string $name, string|int $value): self
     {
-        self::$builder['name'] = $name;
-        self::$builder['value'] = $value;
+        self::$uid = uniqid();
+        self::$builder[self::$uid]['name'] = $name;
+        self::$builder[self::$uid]['value'] = $value;
 
         return new self();
     }

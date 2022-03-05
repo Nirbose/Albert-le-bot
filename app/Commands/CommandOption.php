@@ -105,7 +105,10 @@ class CommandOption
 
         foreach ($choices as $choice) {
             if ($choice instanceof CommandOptionChoice) {
-                self::$builder[self::$id]['choices'][] = $choice->getBuilder();
+                foreach ($choice->getBuilder() as $value) {
+                    self::$builder[self::$id]['choices'][] = $value;
+                }
+                break;
             } else {
                 self::$builder[self::$id]['choices'][] = $choice;
             }
