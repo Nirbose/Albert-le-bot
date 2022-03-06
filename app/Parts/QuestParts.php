@@ -4,6 +4,25 @@ namespace App\Parts;
 
 class QuestParts
 {
+
+    private array $steps = [
+        'level',
+        'notif_roles',
+        'welcome',
+        'invite',
+        'suggestion',
+        'suggestion_accept',
+        'voice_times',
+        'message_quotes',
+    ];
+
+    private string $userID;
+
+    public function __construct(string $userID)
+    {
+        $this->userID = $userID;
+    }
+
     public function get()
     {
         return [
