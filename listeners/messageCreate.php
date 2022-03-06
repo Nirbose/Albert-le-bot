@@ -27,13 +27,24 @@ new Listener([
                 return;
             }
 
+            if ($command['subcommands'] && count($without_prefix) > 1) {
+                $subcommand = $command['subcommands'][$without_prefix[1]];
+
+                if ($subcommand['run']) {
+                    $subcommand['run']->call($message, $message, $discord);
+                }
+            }
+
             $cmd = new CommandBuilder($command);
 
             /** @var Command $command */
             if ($cmd->context != Context::MESSAGE->value) {
                 return;
             }
-            $command['run']->call($message, $message, $discord);
+            
+            if ($command['run']) {
+                $command['run']->call($message, $message, $discord);
+            }
         }
 
         // MESSAGES DE BONJOUR

@@ -85,13 +85,17 @@ class Command
      * @param string $name
      * @return array|null
      */
-    public static function search(string $name): array
+    public static function search(string $name): array|null
     {
         if (isset(self::$commands[$name])) {
             return self::$commands[$name];
         }
 
         foreach (self::$commands as $command) {
+            if (!array_key_exists('aliases', $command)) {
+                return null;
+            }
+
             if (in_array($name, $command['aliases'])) {
                 return self::$commands[$name];
             }
@@ -221,13 +225,21 @@ class Command
     /**
      * Add Subcommand to command
      * 
-     * @param string $name
+     * @param Command $name
      * @param callable $callback
      * @return self
      */
-    public function addSubcommand(string $name, callable $callback): self
+    public function addSubcommand(Command $sub): self
     {
-        self::$commands[$this::$name]['subcommands'][$name]['run'] = $callback;
+        $commands = $sub->getCommands();
+
+        $cmd = $commands[array_keys($commands)[0]];
+        $subcommand = $commands[array_keys($commands)[1]];
+
+        self::$name = $cmd['name'];
+        self::$commands = array_slice(self::$commands, 0, 1);
+
+        self::$commands[$this::$name]['subcommands'][$subcommand['name']] = $subcommand;
 
         return new self;
     }

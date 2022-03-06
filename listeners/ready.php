@@ -20,10 +20,24 @@ new Listener([
         $cmds = Command::getCommands();
 
         foreach ($cmds as $cmd) {
+            $command = $cmd;
             $cmd = new CommandBuilder($cmd);
 
             if ($cmd->isSlash()) {
-                $slash = new SlashCommand($discord, $cmd->slashBuilder());
+                $build = $cmd->slashBuilder();
+
+                if (array_key_exists('subcommands', $command)) {
+                    foreach ($command['subcommands'] as $subcommand) {
+                        $build['options'][] = [
+                            'type' => 1,
+                            'name' => $subcommand['name'],
+                            'description' => array_key_exists('description', $subcommand) ? $subcommand['description'] : "null",
+                            'options' => array_key_exists('options', $subcommand) ? $subcommand['options'] : [],
+                        ];
+                    }
+                }
+
+                $slash = new SlashCommand($discord, $build);
 
                 if (count($cmd->guilds) > 0) {
                     foreach ($cmd->guilds as $guild) {

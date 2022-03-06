@@ -12,10 +12,29 @@ new Listener([
     'listener' => Event::INTERACTION_CREATE,
     'run' => function(Interaction $interaction, Discord $discord) {
         if ($interaction->type === 2) {
+
             $cmd = Command::search($interaction->data->name);
 
+            if ($interaction->data->options) {
+                foreach ($interaction->data->options as $option) {
+                    if ($option->type === 1) {
+                        if (!array_key_exists('subcommands', $cmd)) {
+                            $interaction->respondWithMessage(new MessageBuilder('Cette commande n\'a pas de sous-commandes.'));
+                        }
+
+                        $subcommand = $cmd['subcommands'][$option->name];
+
+                        if (!$subcommand['run']) {
+                            $interaction->respondWithMessage(new MessageBuilder('Cette commande n\'a pas de fonction associée.'));
+                        } else {
+                            $subcommand['run']($interaction, $discord);
+                        }
+                    }
+                }
+            }
+
             if ($cmd) {
-                $cmd['run']->call($interaction, $interaction, $discord);
+                $cmd['run']($interaction, $interaction, $discord);
             }
         }
 
