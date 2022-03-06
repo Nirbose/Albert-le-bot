@@ -27,7 +27,7 @@ new Listener([
                 return;
             }
 
-            if ($command['subcommands'] && count($without_prefix) > 1) {
+            if (array_key_exists('subcommands', $command) && count($without_prefix) > 1) {
                 $subcommand = $command['subcommands'][$without_prefix[1]];
 
                 if ($subcommand['run']) {

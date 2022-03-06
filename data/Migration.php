@@ -28,7 +28,7 @@ DB::schema()->create('quests', function (Blueprint $table) {
     $table->id();
     $table->varchar('userID');
     $table->varchar('guildID');
-    $table->int('quest');
+    $table->varchar('type');
     $table->json('datas');
     $table->timestamp();
 });

@@ -22,8 +22,8 @@ $client = new Discord([
     'intents' => Intents::getAllIntents()
 ]);
 
-foreach (glob("commands/*/*.php") as $filename) require_once $filename;
 foreach (glob("listeners/*.php") as $filename) require_once $filename;
+foreach (glob("commands/*/*.php") as $filename) require_once $filename;
 
 Handler::load($client);
 
