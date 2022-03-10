@@ -2,9 +2,12 @@
 
 use App\App;
 use App\Commands\Command;
+use App\Database\DB;
 use App\Listener;
 use Discord\Builders\MessageBuilder;
 use Discord\Discord;
+use Discord\Parts\Channel\Message;
+use Discord\Parts\Channel\Webhook;
 use Discord\Parts\Interactions\Interaction;
 use Discord\WebSockets\Event;
 
@@ -60,6 +63,39 @@ new Listener([
             }
 
             $interaction->respondWithMessage(MessageBuilder::new()->setContent('Voilà votre profil est à jour !'), true);
+        }
+
+        // WELCOME INTERACTION
+        if ($interaction->data->custom_id == "welcome") {
+            $welcome = DB::table('welcomes')->where([
+                'guildID' => $interaction->guild->id,
+                'messageID' => $interaction->message->id,
+            ])->first();
+
+            $channel = $discord->getChannel($interaction->channel_id);
+
+            $channel->sendMessage(
+                MessageBuilder::new()
+                ->setContent("<@" . $welcome['memberID'] . ">")
+                ->setReplyTo($interaction->message)
+            )->done(function (Message $m) use ($interaction) {
+                $m->edit(
+                    MessageBuilder::new()
+                        ->setContent(' ')
+                        ->addEmbed([
+                            'color' => hexdec('#2F3136'),
+                            'author' => [
+                                'name' => $interaction->member->user->username,
+                                'icon_url' => $interaction->member->user->avatar
+                            ],
+                            'image' => [
+                                'url' => "https://c.tenor.com/Q7lJ9piCh2YAAAAC/youre-welcome-take-a-bow.gif"
+                            ]
+                        ])
+                );
+            });
+
+            $interaction->acknowledge();
         }
     }
 ]);

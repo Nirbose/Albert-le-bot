@@ -56,3 +56,12 @@ DB::schema()->create('voice_times', function (Blueprint $table) {
     $table->int('time');
     $table->timestamp();
 });
+
+// Welcome message save
+DB::schema()->create('welcomes', function (Blueprint $table) {
+    $table->id();
+    $table->varchar('guildID');
+    $table->varchar('memberID');
+    $table->varchar('messageID');
+    $table->timestamp();
+});

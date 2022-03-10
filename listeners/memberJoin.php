@@ -6,13 +6,13 @@ use Discord\Builders\Components\ActionRow;
 use Discord\Builders\Components\Button;
 use Discord\Builders\MessageBuilder;
 use Discord\Discord;
-use Discord\Parts\Interactions\Interaction;
+use Discord\Parts\Channel\Message;
 use Discord\Parts\User\Member;
 use Discord\WebSockets\Event;
 
 new Listener([
     'listener' => Event::GUILD_MEMBER_ADD,
-    'run' => function (Member $member, Discord $discord) use ($global) {
+    'run' => function (Member $member, Discord $discord) {
         $sentences = DB::table('sentences')->where([
             'guildID' => $member->guild->id,
             'type' => 1,
@@ -33,10 +33,13 @@ new Listener([
             MessageBuilder::new()
             ->setContent('<:emoji_3:829625615090712576> ' . $message)
             ->addComponent($row)
-        );
-
-        $btn->setListener(function (Interaction $i) {
-            // Interaction was clicked
-        }, $discord);
+        )->done(function (Message $message) use ($member) {
+            DB::table('welcomes')->insert([
+                'guildID' => $message->channel->guild->id,
+                'messageID' => $message->id,
+                'memberID' => $member->id,
+                'timestamp' => time(),
+            ]);
+        });
     }
 ]);
