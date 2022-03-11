@@ -35,10 +35,7 @@ new Listener([
                 }
             }
 
-            $cmd = new CommandBuilder($command);
-
-            /** @var Command $command */
-            if ($cmd->context != Context::MESSAGE->value) {
+            if (array_key_exists('context', $command) && $command['context'] === Context::MESSAGE->value) {
                 return;
             }
             

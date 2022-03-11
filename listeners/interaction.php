@@ -7,7 +7,6 @@ use App\Listener;
 use Discord\Builders\MessageBuilder;
 use Discord\Discord;
 use Discord\Parts\Channel\Message;
-use Discord\Parts\Channel\Webhook;
 use Discord\Parts\Interactions\Interaction;
 use Discord\WebSockets\Event;
 
