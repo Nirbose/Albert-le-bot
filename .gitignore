@@ -2,6 +2,8 @@
 node_modules
 data/database.db
 .vscode
+/quests/
+
 ##### Windows
 # Windows thumbnail cache files
 Thumbs.db

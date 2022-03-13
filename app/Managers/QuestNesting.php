@@ -2,7 +2,7 @@
 
 namespace App\Parts;
 
-class QuestParts
+class QuestNesting
 {
 
     private array $steps = [
