@@ -3,7 +3,9 @@
 use App\Commands\Command;
 use App\Commands\Context;
 use App\Listener;
+use Discord\CommandClient\Command as CommandClientCommand;
 use Discord\Parts\Interactions\Command\Command as SlashCommand;
+use Discord\Parts\Interactions\Command\Overwrite;
 use Discord\Parts\User\Activity;
 
 new Listener([
@@ -23,13 +25,13 @@ new Listener([
 
             if (array_key_exists('context', $cmd) && $cmd['context'] === Context::SLASH->value) {
                 $build = [
-                    'type' => array_key_exists('type', $cmd['slash']) ? $cmd['slash']['type'] : 1,
+                    'type' => array_key_exists('type', $cmd) ? $cmd['type'] : 1,
                     'name' => $cmd['name'],
-                    'description' => array_key_exists('description', $cmd['slash']) ? $cmd['slash']['description'] : "null",
+                    'description' => array_key_exists('description', $cmd) ? $cmd['description'] : "null",
                 ];
 
                 if ($build['type'] === 1) {
-                    $build['options'] = array_key_exists('options', $cmd['slash']) ? $cmd['slash']['options'] : [];
+                    $build['options'] = array_key_exists('options', $cmd) ? $cmd['options'] : [];
                 }
 
                 if (array_key_exists('subcommands', $cmd)) {
@@ -45,12 +47,32 @@ new Listener([
 
                 $slash = new SlashCommand($discord, $build);
 
-                if (count($cmd->guilds) > 0) {
-                    foreach ($cmd->guilds as $guild) {
-                        $discord->guilds->get('id', $guild)->commands->save($slash);
+                if (array_key_exists('guilds', $cmd)) {
+
+                    if (count($cmd['guilds']) > 0) {
+                        foreach ($cmd['guilds'] as $guild) {
+                            $saveCMD = $discord->guilds->get('id', $guild)->commands->save($slash);
+                        }
+                    } else {
+                        $saveCMD = $discord->application->commands->save($slash);
                     }
+
                 } else {
-                    $discord->application->commands->save($slash);
+                    $saveCMD = $discord->application->commands->save($slash);
+                }
+
+                if (array_key_exists('permissions', $cmd)) {
+                    foreach ($cmd['permissions'] as $permission) {
+                        $overwrite = new Overwrite($discord, [
+                            'id' => $permission['id'],
+                            'type' => $permission['type'],
+                            'permission' => $permission['permission'],
+                        ]);
+
+                        $saveCMD->done(function (SlashCommand $slash) use ($overwrite) {
+                            $slash->setOverwrite($overwrite);
+                        });
+                    }
                 }
 
             }

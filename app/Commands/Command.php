@@ -4,6 +4,7 @@ namespace App\Commands;
 
 use Discord\Discord;
 use Discord\Parts\Interactions\Command\Command as SlashTypeCommand;
+use Discord\Parts\Interactions\Command\Permission;
 
 enum Context: int {
     case MESSAGE = 1;
@@ -218,6 +219,24 @@ class Command
     public function setGuilds(string ...$guilds): self
     {
         $this::$commands[$this::$name]['guilds'] = $guilds;
+
+        return new static();
+    }
+
+    /**
+     * Set permition of command
+     * 
+     * @param int $type
+     * @param string $id
+     * @return self
+     */
+    public function setPermition(int $type, string $id): self
+    {
+        array_push(self::$commands[$this::$name]['permissions'], [
+            'id' => $id,
+            'type' => $type,
+            'permission' => true
+        ]);
 
         return new static();
     }
