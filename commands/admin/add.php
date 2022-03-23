@@ -10,6 +10,7 @@ use Discord\Builders\Components\Component;
 use Discord\Builders\Components\TextInput;
 use Discord\Builders\MessageBuilder;
 use Discord\Helpers\Collection;
+use Discord\Parts\Interactions\Command\Permission;
 use Discord\Parts\Interactions\Interaction;
 
 Command::add('add', function() {})
@@ -39,6 +40,7 @@ Command::add('add', function() {})
         });
     })
     ->setDescription('Add a new quest')
+    ->setPermition(Permission::TYPE_USER, '890286598460157993')
 )
 ->setContext(Context::SLASH)
 ->setGuilds('781105165754433537');

@@ -232,11 +232,12 @@ class Command
      */
     public function setPermition(int $type, string $id): self
     {
-        array_push(self::$commands[$this::$name]['permissions'], [
+        $this::$commands[$this::$name]['default_permission'] = false;
+        $this::$commands[$this::$name]['permissions'][] = [
             'id' => $id,
             'type' => $type,
             'permission' => true
-        ]);
+        ];
 
         return new static();
     }
