@@ -5,10 +5,7 @@
         }
     },
     "require": {
-        "vlucas/phpdotenv": "^5.3",
-        "brianmcdo/image-palette": "^2.0",
-        "team-reflex/discord-php": "dev-develop",
-        "guzzlehttp/guzzle": "^7.3",
-        "discord-php/slash": "^1.0"
+        "vlucas/phpdotenv": "^5.6.0",
+        "team-reflex/discord-php": "^10.0.0-RC6"
     }
 }

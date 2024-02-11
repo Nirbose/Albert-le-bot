@@ -4,14 +4,12 @@ namespace App;
 
 use Discord\Discord;
 use Discord\Parts\Channel\Message;
-use App\Command;
-use App\Listener;
 use App\Namespaces\Permissions;
 use Discord\Builders\Components\ActionRow;
 use Discord\Builders\Components\Button;
 use Discord\Builders\MessageBuilder;
 use Discord\Parts\Interactions\Interaction;
-use Discord\Parts\Permissions\Permission;
+use Discord\WebSockets\Event;
 
 class Handler {
 
@@ -20,7 +18,7 @@ class Handler {
 
     public function handler(Discord $client)
     {
-        $client->on('message', function(Message $message, Discord $client) {
+        $client->on(Event::MESSAGE_CREATE, function(Message $message, Discord $client) {
             $this->message = $message;
             $this->client = $client;
 
@@ -38,7 +36,7 @@ class Handler {
 
         if (str_starts_with($this->message->content, PREFIX)){
             $without_prefix = explode(" ", substr($this->message->content, 1));
-    
+
             foreach(Command::$commands as $command){
 
                 // Handle eval command
