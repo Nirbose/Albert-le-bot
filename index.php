@@ -4,6 +4,7 @@ include __DIR__.'/vendor/autoload.php';
 
 use App\Handler;
 use App\Namespaces\Presence;
+use Discord\Exceptions\IntentException;
 use Dotenv\Dotenv;
 use Discord\Discord;
 use Discord\Parts\User\Activity;
@@ -14,17 +15,17 @@ Dotenv::createImmutable(__DIR__)->load();
 
 define("PREFIX", $_ENV["PREFIX"]);
 
-foreach (glob("plugins/*/*.php") as $filename) require_once $filename;
+foreach (glob("commands/*/*.php") as $filename) require_once $filename;
 foreach (glob("listeners/*.php") as $filename) require_once $filename;
 
-$client = new Discord([
-    'token' => $_ENV['TOKEN'],
-    'loadAllMembers' => true,
-    'logger' => new Logger('Albert-le-bot'),
-    'intents' => Intents::getAllIntents()
-]);
-
 try {
+
+    $client = new Discord([
+        'token' => $_ENV['TOKEN'],
+        'loadAllMembers' => true,
+        'logger' => new Logger('Albert-le-bot'),
+        'intents' => Intents::getAllIntents()
+    ]);
 
     $client->on('ready', function (Discord $client) {
         
@@ -40,6 +41,6 @@ try {
     });
 
     $client->run();
-} catch (\Discord\Exceptions\IntentException $e) {
+} catch (IntentException $e) {
     echo $e->getMessage(), PHP_EOL;
 }
