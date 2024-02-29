@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Namespaces\Permissions;
+use Discord\Parts\Channel\Message;
 use Error;
 
 /**
@@ -22,9 +23,9 @@ class Command
     private string $name;
     private string $description;
     private array $aliases = [];
-    private $permission;
+    private string $permission = "";
     private string $usage = 'None';
-
+    private array $middleware = [];
     private $run;
 
     public function __construct(array $options)
@@ -47,19 +48,47 @@ class Command
         if(isset($options['aliases'])) $this->aliases = $options['aliases'];
         if(isset($options['permission'])) $this->permission = $options['permission'];
         if(isset($options['usage'])) $this->usage = $options['usage'];
+        if(isset($options['middleware'])) $this->middleware = $options['middleware'];
 
         self::$commands[$options['name']] = $this;
         
     }
 
-    public function run($message, $args): void
+    private function canExecute(Message $message, string $args): bool
     {
-        if ($this->permission && !Permissions::hasPermission($this->message->author, $this->permission)) {
+        if (!empty($this->permission) && !Permissions::hasPermission($message->member, $this->permission)) {
             $message->channel->sendMessage("Vous n'avez pas la permition requise");
-            return;
+            return false;
         }
 
-        call_user_func($this->run, $message, $args);
+        /** @var string $middleware */
+        foreach($this->middleware as $middleware) {
+            if (!class_exists($middleware))
+            {
+                throw new Error(sprintf("Middleware %s not found", $middleware));
+            }
+
+            /** @var Middleware $instance */
+            $instance = new $middleware();
+            if (!$instance->handle($message, $args))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public function run(Message $message, string $args): void
+    {
+        if ($this->canExecute($message, $args))
+        {
+            call_user_func($this->run, $message, $args, new App($message));
+        }
+        else
+        {
+            $message->channel->sendMessage("Vous n'avez pas la permition requise");
+        }
     }
 
     public static function getCommands(): array

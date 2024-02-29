@@ -2,19 +2,22 @@
 
 use App\App;
 use App\Command;
+use App\Middlewares\OwnerMiddleware;
 use Discord\Builders\Components\Option;
-use Discord\Builders\Components\SelectMenu;
+use Discord\Builders\Components\StringSelect;
 use Discord\Builders\MessageBuilder;
 use Discord\Parts\Channel\Message;
-use Discord\Parts\Interactions\Interaction;
 
 new Command([
     'name' => 'rolechoices',
-    'ownerOnly' => true,
+    'description' => 'Choisissez vos rôles !',
+    'middleware' => [
+        OwnerMiddleware::class,
+    ],
     'run' => function (Message $message, string $rest, App $app) {
         $message->delete();
         $description = '';
-        $select = SelectMenu::new('roles_choices')
+        $select = StringSelect::new('roles_choices')
             ->setPlaceholder('Tout les rôles dispo sont là !')
             ->setMinValues(1)
             ->setMaxValues(count($app->collec['roles']['user_choice_roles']));
