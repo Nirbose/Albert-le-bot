@@ -2,28 +2,38 @@
 
 namespace App;
 
+use App\Namespaces\Permissions;
+use Error;
+
+/**
+ * Class Command
+ * @package App
+ *
+ * @property string $name
+ * @property string $description
+ * @property array $aliases
+ * @property string $permission
+ * @property string $usage
+ */
 class Command
 {
-    public static $commands = [];
+    private static array $commands = [];
 
-    public $name;
-    public $description;
-    public $aliases = [];
-    public $ownerOnly;
-    public $boosterOnly;
-    public $permission;
-    public $invisible;
-    public $usage = 'None';
+    private string $name;
+    private string $description;
+    private array $aliases = [];
+    private $permission;
+    private string $usage = 'None';
 
-    public $run;
+    private $run;
 
     public function __construct(array $options)
     {
         if(!isset($options['name']))
-            throw new \Error("Missing name property on some Command");
+            throw new Error("Missing name property on some Command");
 
         if(!isset($options['run']))
-            throw new \Error('Missing run property on "'.$options['name'].'" Command');
+            throw new Error('Missing run property on "'.$options['name'].'" Command');
 
         $this->name = strtolower($options['name']);
         $this->run = $options['run'];
@@ -35,14 +45,33 @@ class Command
         }
 
         if(isset($options['aliases'])) $this->aliases = $options['aliases'];
-        if(isset($options['ownerOnly'])) $this->ownerOnly = $options['ownerOnly'];
-        if(isset($options['boosterOnly'])) $this->boosterOnly = $options['boosterOnly'];
         if(isset($options['permission'])) $this->permission = $options['permission'];
-        if(isset($options['invisible'])) $this->invisible = $options['invisible'];
         if(isset($options['usage'])) $this->usage = $options['usage'];
 
         self::$commands[$options['name']] = $this;
         
     }
 
+    public function run($message, $args): void
+    {
+        if ($this->permission && !Permissions::hasPermission($this->message->author, $this->permission)) {
+            $message->channel->sendMessage("Vous n'avez pas la permition requise");
+            return;
+        }
+
+        call_user_func($this->run, $message, $args);
+    }
+
+    public static function getCommands(): array
+    {
+        return self::$commands;
+    }
+
+    public function __get($name)
+    {
+        if (property_exists($this, $name)) {
+            return $this->$name;
+        }
+        return null;
+    }
 }

@@ -39,8 +39,8 @@ class DefaultEmbed {
         $content = [
             'color' => hexdec($this->color),
             'author' => [
-                'name' => $message->author->user->username,
-                'icon_url' => $message->author->user->avatar
+                'name' => $message->author->username,
+                'icon_url' => $message->author->avatar
             ],
         ];
 
